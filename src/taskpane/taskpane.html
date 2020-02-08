@@ -1,0 +1,136 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contoso Task Pane Add-in</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- For more information on Office UI Fabric, visit https://developer.microsoft.com/fabric. -->
+    <!-- <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"/> -->
+	<link rel="stylesheet" href="node_modules/office-ui-fabric-core/dist/css/fabric.css" />
+	<link rel="stylesheet" href="node_modules/office-ui-fabric-js/dist/css/fabric.components.css" />
+	<script type="text/javascript" src="node_modules/office-ui-fabric-js/dist/js/fabric.min.js"></script>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+
+    <script src="blockly/blockly_compressed.js"></script>
+	<script src="blockly/javascript_compressed.js"></script>
+	<script src="blockly/blocks_compressed.js"></script>
+	<script src="blockly/msg/js/en.js"></script>
+
+	
+	<script type="text/javascript" src="xlb_blocks.js"></script>
+
+</head>
+
+<body>
+	<div class="outer" id="content-main" dir="ltr">
+		<div class="menu">
+			<div class="ms-Dropdown" tabindex="0" id="formulaDiv" style="z-index: 1;">
+				<i class="ms-Dropdown-caretDown ms-Icon ms-Icon--ChevronDown"></i>
+				<select class="ms-Dropdown-select" id="ddlFormulas">
+				</select>
+			</div>
+			<button class="ms-Button ms-Button--hero" id="newFormula">
+				<span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Add" aria-hidden="true"></i></span>
+			</button>
+			<button class="ms-Button ms-Button--hero" id="changeFormula">
+				<span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Edit" aria-hidden="true"></i></span>
+			</button>
+			<button class="ms-Button ms-Button--hero" id="validateFormula">
+				<span class="ms-Button-icon"><i class="ms-Icon ms-Icon--CheckMark" aria-hidden="true"></i></span>
+			</button>
+			<button class="ms-Button ms-Button--hero" id="cancel">
+				<span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Cancel" aria-hidden="true"></i></span>
+			</button>			
+		</div>
+
+		<div class="blocklyFrame" id="blocklyArea"></div>
+	</div>
+	<div id="blocklyDiv" style="position: absolute; z-index: 0;"></div>
+
+	<script type="text/javascript" src="node_modules/core-js/client/core.js"></script>
+
+	<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
+	  <category name="Functions">
+	    <block type="fn_sum"></block>
+	    <block type="fn_sumifs">
+	      <statement name="filter_statements">
+	        <block type="fn_sumifs_filters"></block>
+	      </statement>
+	    </block>
+	    <block type="fn_sumifs_filters"></block>
+	    <block type="lookup"></block>
+	    <block type="fn_subtract"></block>
+	    <block type="fn_divide"></block>
+	    <block type="fn_if_error"></block>
+	    <block type="fn_if"></block>
+	    <block type="fn_greater_than"></block>
+	    <block type="fn_less_than"></block>
+	  </category>
+	  <category name="Cell References">
+	    <block type="range">
+	      <field name="range_address">range</field>
+	    </block>
+	    <block type="for_each_row"></block>
+	    <block type="for_each_column"></block>
+	  </category>
+	  <category name="Workbook Management">
+	  <block type="formula">
+	    <field name="formula_name">formula name</field>
+	    <value name="output">
+	    </value>
+	  </block>
+	  </category>
+	  <category name="Constants">
+	    <block type="c_number">
+	      <field name="number">0</field>
+	    </block>
+	    <block type="c_text">
+	      <field name="text"></field>
+	    </block>
+	    <block type="comments">
+	      <field name="comment_text"></field>
+	    </block>
+	  </category>
+	</xml>
+
+	<script type="text/javascript">
+	</script>
+
+	<script >
+		var blocklyArea = document.getElementById('blocklyArea');
+		var blocklyDiv = document.getElementById('blocklyDiv');
+		var workspace = Blockly.inject('blocklyDiv', {toolbox: document.getElementById('toolbox'), maxInstances: {formula: 1}, horizontalLayout: true, zoom: {startScale: 0.8}, trashcan: true});
+		var onresize = function(e) {
+			var element = blocklyArea;
+			var x = 0;
+			var y = 0;
+			do {
+				x += element.offsetLeft;
+				y += element.offsetTop;
+				element = element.offsetParent;
+			} while (element);
+			blocklyDiv.style.left = x + 'px';
+			blocklyDiv.style.top = y + 'px';
+			blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+			blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+			Blockly.svgResize(workspace);
+		};
+		window.addEventListener('resize', onresize, false);
+		onresize();
+		Blockly.svgResize(workspace);
+		blocklyDiv.style.display = "none";
+	</script>
+</body>
+
+</html>
