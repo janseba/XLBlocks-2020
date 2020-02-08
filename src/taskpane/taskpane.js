@@ -85,6 +85,25 @@ export async function getExistingFormulas() {
   }
 }
 
+export function testXLBlocks() {
+  try {
+    Excel.run(function (context) {
+      var sheets = context.workbook.worksheets
+      sheets.load('items/name')
+      return context.sync();
+      .then(function (){
+        if (sheetExists(sheets.items, 'XLBlocks')) {
+          console.log('de sheet bestaat')
+        } else {
+          console.log('de sheet bestaat niet')
+        }
+      })
+    })
+  } catch(error) {
+    console.log(error)
+  }
+}
+
 export async function validateFormula() {
   try {
     await Excel.run(async context => {
