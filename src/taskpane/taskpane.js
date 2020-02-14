@@ -14,6 +14,7 @@ Office.onReady(info => {
     document.getElementById("newFormula").onclick = newFormula;
     document.getElementById("changeFormula").onclick = editFormula;
     document.getElementById("cancel").onclick = cancel;
+    document.getElementById("ddlFormulas").onchange = formulaSelectionChanged;
     toggleButton('newFormula',true)
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
@@ -28,7 +29,11 @@ Office.onReady(info => {
 });
 
 export function formulaSelectionChanged() {
-  console.log(document.getElementById('ddlFormulas').value)
+  if (document.getElementById('ddlFormulas').value != 'Create a formula...') {
+    toggleButton('delete', true)
+  } else {
+    toggleButton('delete', false)
+  }
 }
 
 export async function editFormula() {
@@ -347,7 +352,7 @@ export function buildFormulaDdl() {
   var select = document.getElementById('ddlFormulas');
   var option = document.createElement('option');
   option.text = 'Create a formula...'
-  option.value = 'value'
+  option.value = 'Create a formula...'
   select.add(option)
 
   var DropdownHTMLElement = document.getElementById('formulaDiv');
