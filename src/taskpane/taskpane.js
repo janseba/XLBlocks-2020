@@ -15,6 +15,7 @@ Office.onReady(info => {
     document.getElementById("changeFormula").onclick = editFormula;
     document.getElementById("cancel").onclick = cancel;
     document.getElementById("ddlFormulas").onchange = formulaSelectionChanged;
+    document.getElementById("delete").onclick = deleteFormula;
     toggleButton('newFormula',true)
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
@@ -27,6 +28,13 @@ Office.onReady(info => {
     }) 
   }
 });
+
+export function deleteFormula() {
+  var ddlFormulas = document.getElementById("ddlFormulas")
+  if (ddlFormulas.value != 'Create a formula...') {
+    ddlFormulas.options[ddlFormulas.selectedIndex].remove();
+  }
+}
 
 export function formulaSelectionChanged() {
   if (document.getElementById('ddlFormulas').value != 'Create a formula...') {
