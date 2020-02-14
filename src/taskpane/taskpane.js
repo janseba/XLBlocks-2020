@@ -19,6 +19,7 @@ Office.onReady(info => {
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
     getExistingFormulas()
+    console.log(document.getElementById("ddlFormulas").length)
   }
 });
 
