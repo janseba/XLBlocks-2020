@@ -24,15 +24,38 @@ Office.onReady(info => {
         toggleButton('changeFormula', true)
       } else {
         toggleButton('changeFormula', false)
+        toggleButton('delete',false)
       }
     }) 
   }
 });
 
-export function deleteFormula() {
-  var ddlFormulas = document.getElementById("ddlFormulas")
-  if (ddlFormulas.value != 'Create a formula...') {
-    ddlFormulas.options[ddlFormulas.selectedIndex].remove();
+export async function deleteFormula() {
+  try{
+    await Excel.run(async context => {
+      var sheets = context.workbook.worksheets
+      sheets.load('items/name')
+      await context.sync();
+      if (sheetExists(sheets.items, 'XLBlocks')) {
+        var sht = sheets.getItem('XLBlocks')
+        var rngDefinitions = sht.getUsedRange();
+        rngDefinitions.load('values');
+        await context.sync();
+        if (typeof rngDefinitions !== 'undefined') {
+          var xlValues = rngDefinitions.values
+          var ddlFormulas = document.getElementById('ddlFormulas')
+          var formulaIds = getCol(xlValues,0)
+          var formulaRowNumber = formulaIds.indexOf(ddlFormulas.value)
+          var formulaRow = rngDefinitions.getRow(formulaRowNumber)
+          formulaRow.delete("Up")
+          await context.sync();
+          xlValues.splice(formulaRowNumber,1);
+          replaceFormulaDdl(xlValues);
+        }
+      }
+    })
+  } catch(error) {
+    console.log(error)
   }
 }
 
@@ -321,6 +344,7 @@ export function newFormula() {
     toggleButton('changeFormula', false)
     toggleButton('validateFormula', true);
     toggleButton('cancel', true);
+    toggleButton('delete', false);
 
   } catch (error) {
     console.error(error);
