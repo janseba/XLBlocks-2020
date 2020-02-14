@@ -15,11 +15,15 @@ Office.onReady(info => {
     document.getElementById("changeFormula").onclick = editFormula;
     document.getElementById("cancel").onclick = cancel;
     toggleButton('newFormula',true)
-    toggleButton('changeFormula', false)
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
-    getExistingFormulas()
-    console.log(document.getElementById("ddlFormulas").length)
+    getExistingFormulas().then(function () {
+      if (document.getElementById('ddlFormulas').length > 1) {
+        toggleButton('changeFormula', true)
+      } else {
+        toggleButton('changeFormula', false)
+      }
+    }) 
   }
 });
 
