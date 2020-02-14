@@ -27,6 +27,10 @@ Office.onReady(info => {
   }
 });
 
+export function formulaSelectionChanged() {
+  console.log(document.getElementById('ddlFormulas').value)
+}
+
 export async function editFormula() {
   try {
     toggleButton('validateFormula',true)
