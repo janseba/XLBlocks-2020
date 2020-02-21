@@ -231,6 +231,10 @@ export function replaceFormulaDdl(formulas) {
       option.value = formulas[i][0]
       select.add(option);
     }
+    if (formulas.length == 1) {
+      toggleButton('delete', false)
+      toggleButton('changeFormula', false)
+    }
   }
   buildFormulaDdl();  
   } catch(error) {
