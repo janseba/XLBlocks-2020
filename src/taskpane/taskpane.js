@@ -62,8 +62,10 @@ export async function deleteFormula() {
 export function formulaSelectionChanged() {
   if (document.getElementById('ddlFormulas').value != 'Create a formula...') {
     toggleButton('delete', true)
+    toggleButton('changeFormula', true)
   } else {
     toggleButton('delete', false)
+    toggleButton('changeFormula', false)
   }
 }
 
@@ -399,8 +401,18 @@ export function buildFormulaDdl() {
 export function cancel() {
   workspace.clear();
   hideBlockly();
-  toggleButton('newFormula', true);
-  toggleButton('changeFormula', true);
-  toggleButton('cancel', false);
-  toggleButton('validateFormula', false);
+  var select = document.getElementById('ddlFormulas');
+  if (select.length == 1 | select.value == 'Create a formula...') {
+    toggleButton('newFormula', true);
+    toggleButton('changeFormula', false);
+    toggleButton('cancel', false);
+    toggleButton('validateFormula', false);
+    toggleButton('delete', false) 
+  } else {
+    toggleButton('newFormula', true);
+    toggleButton('changeFormula', true);
+    toggleButton('cancel', false);
+    toggleButton('validateFormula', false);
+    toggleButton('delete', true) 
+  }
 }
