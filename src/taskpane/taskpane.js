@@ -194,6 +194,7 @@ export async function validateFormula() {
     toggleButton('newFormula', true);
     toggleButton('cancel', false);
     toggleButton('changeFormula', true);
+    toggleButton('delete', true);
   } catch (error) {
     console.log(error);
   }
