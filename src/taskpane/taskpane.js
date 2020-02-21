@@ -16,6 +16,7 @@ Office.onReady(info => {
     document.getElementById("cancel").onclick = cancel;
     document.getElementById("ddlFormulas").onchange = formulaSelectionChanged;
     document.getElementById("delete").onclick = deleteFormula;
+    document.getElementById("pasteRange").onclick = pasteRange
     toggleButton('newFormula',true)
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
@@ -101,7 +102,24 @@ export async function editFormula() {
   } catch(error) {
     console.log(error)
   }
-} 
+}
+
+export async function pasteRange() {
+  try {
+    await Excel.run(async context => {
+      var range = context.workbook.getSelectedRange();
+      range.load('address')
+      await context.sync();
+      var selectedAddress = range.address.slice(range.address.indexOf('!') + 1)
+      var selectedBlock = Blockly.selected
+      if (selectedBlock.type == "range") {
+        selectedBlock.getField("range_address").setValue(selectedAddress)
+      }
+    })
+  } catch(error) {
+    console.log(error)
+  }
+}
 
 export async function getExistingFormulas() {
   try {
