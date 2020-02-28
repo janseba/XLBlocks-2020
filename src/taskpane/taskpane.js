@@ -17,6 +17,7 @@ Office.onReady(info => {
     document.getElementById("ddlFormulas").onchange = formulaSelectionChanged;
     document.getElementById("delete").onclick = deleteFormula;
     document.getElementById("pasteRange").onclick = pasteRange
+    document.getElementById("inspectFormula").onclick = inspectFormula
     toggleButton('newFormula',true)
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
@@ -432,5 +433,19 @@ export function cancel() {
     toggleButton('cancel', false);
     toggleButton('validateFormula', false);
     toggleButton('delete', true) 
+  }
+}
+
+export function inspectFormula() {
+  try{
+    fetch('https://cors-anywhere.herokuapp.com/https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula=SUM(B5%2C2)%2B3')
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+  } catch(error) {
+    console.log(error)
   }
 }
