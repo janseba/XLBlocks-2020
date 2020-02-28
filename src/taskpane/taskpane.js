@@ -18,6 +18,7 @@ Office.onReady(info => {
     document.getElementById("delete").onclick = deleteFormula;
     document.getElementById("pasteRange").onclick = pasteRange
     document.getElementById("inspectFormula").onclick = inspectFormula
+    document.getElementById("clearMessage").onclick = clearMessage
     toggleButton('newFormula',true)
     toggleButton('validateFormula', false)
     toggleButton('cancel', false)
@@ -436,16 +437,39 @@ export function cancel() {
   }
 }
 
-export function inspectFormula() {
+export async function inspectFormula() {
   try{
-    fetch('https://cors-anywhere.herokuapp.com/https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula=SUM(B5%2C2)%2B3')
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      })
+    // await Excel.run(async context => {
+    //   var range = context.workbook.getSelectedRange();
+    //   range.load("formulas");
+    //   range.load("cellCount");
+    //   await context.sync()
+    //   console.log(range.formulas);
+    //   var url = 'https://cors-anywhere.herokuapp.com/https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula'
+    //   var formula = encodeURI(range.formulas[0]);
+    //   url = url + formula
+    //   fetch(url)
+    //   .then((response) => {
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     console.log(data)
+    //   })
+    // })
+    var statusBar = document.getElementById('statusBar')
+    statusBar.style.display = "block"
+    var message = document.getElementById('messageText')
+    message.innerText = 'hallo'
+    document.getElementById("clearMessage").onclick=clearMessage
   } catch(error) {
     console.log(error)
   }
 }
+
+export function clearMessage() {
+  var statusBar = document.getElementById('statusBar')
+  var message = document.getElementById('messageText')
+  message.innerText = ""
+  statusBar.style.display = "none"
+}
+
