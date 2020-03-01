@@ -439,23 +439,22 @@ export function cancel() {
 
 export async function inspectFormula() {
   try{
-    // await Excel.run(async context => {
-    //   var range = context.workbook.getSelectedRange();
-    //   range.load("formulas");
-    //   range.load("cellCount");
-    //   await context.sync()
-    //   console.log(range.formulas);
-    //   var url = 'https://cors-anywhere.herokuapp.com/https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula'
-    //   var formula = encodeURI(range.formulas[0]);
-    //   url = url + formula
-    //   fetch(url)
-    //   .then((response) => {
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     console.log(data)
-    //   })
-    // })
+    await Excel.run(async context => {
+      var range = context.workbook.getSelectedRange();
+      range.load("formulas");
+      range.load("cellCount");
+      await context.sync()
+      var url = 'https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula'
+      var formula = encodeURI(range.formulas[0]);
+      url = url + formula
+      fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data)
+      })
+    })
     var statusBar = document.getElementById('statusBar')
     statusBar.style.display = "block"
     var message = document.getElementById('messageText')
