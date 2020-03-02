@@ -465,6 +465,19 @@ export async function inspectFormula() {
   }
 }
 
+export function testCreateBlock() {
+  try{
+    const xmlString = '<xml xmlns="https://developers.google.com/blockly/xml"><block type="formula" x="20" y="20"><field name="formula_name">SUM Test</field><value name="output"><block type="range"><field name="range_address">H5</field></block></value><value name="statements"><block type="fn_sum"><value name="sum_parameters"><block type="range"><field name="range_address">D5:G5</field></block></value></block></value></block></xml>'
+    workspace.clear()
+    showBlockly()
+    var xml = Blockly.Xml.textToDom(xmlString)
+    Blockly.Xml.domToWorkspace(xml, workspace)
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+
 export function clearMessage() {
   var statusBar = document.getElementById('statusBar')
   var message = document.getElementById('messageText')
