@@ -452,12 +452,16 @@ export async function inspectFormula() {
         return response.json();
       })
       .then((data) => {
-        console.log(data)
-        console.log(xmlFormula('testSum',
+        var xml = xmlFormula('testSum',
             xmlRange('A3'),
             xmlSUM(xmlRange('A1:A2')),
             '0',
-            '0'))
+            '0')
+        console.log(xml)
+        workspace.clear()
+        showBlockly()
+        xml = Blockly.Xml.textToDom(xml)
+        Blockly.Xml.domToWorkspace(xml, workspace)
       })
     })
     var statusBar = document.getElementById('statusBar')
@@ -475,11 +479,11 @@ export function xmlRange(address) {
 }
 
 export function xmlSUM(parameters) {
-  return '<block type="fn_sum"><value name=sum_parameters">' + parameters + '</value></block>'
+  return '<block type="fn_sum"><value name="sum_parameters">' + parameters + '</value></block>'
 }
 
 export function xmlFormula(name, output, functions, x, y) {
-  return '<xml xmlns="https://developers/google.com/blockly/xml">' + 
+  return '<xml xmlns="https://developers.google.com/blockly/xml">' + 
             '<block type="formula" x="' + x + '" y="' + y + '">' +
               '<field name="formula_name">' + name + '</field>' +
               '<value name="output">' + output + '</value>' +
