@@ -453,6 +453,7 @@ export async function inspectFormula() {
       })
       .then((data) => {
         console.log(data)
+        console.log(xmlSUM(xmlRange('A1:A2')))
       })
     })
     var statusBar = document.getElementById('statusBar')
@@ -464,6 +465,15 @@ export async function inspectFormula() {
     console.log(error)
   }
 }
+
+export function xmlRange(address) {
+  return '<block type="range"><field name ="range_address">' + address + '</field></block>'
+}
+
+export function xmlSUM(parameters) {
+  return '<block type="fn_sum"><value name=sum_parameters">' + parameters + '</value></block>'
+}
+
 
 export function testCreateBlock() {
   try{
