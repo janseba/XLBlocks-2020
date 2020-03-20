@@ -452,16 +452,17 @@ export async function inspectFormula() {
         return response.json();
       })
       .then((data) => {
-        var xml = xmlFormula('testSum',
-            xmlRange('A3'),
-            xmlSUM(xmlRange('A1:A2')),
-            '0',
-            '0')
-        console.log(xml)
-        workspace.clear()
-        showBlockly()
-        xml = Blockly.Xml.textToDom(xml)
-        Blockly.Xml.domToWorkspace(xml, workspace)
+        traverse(data)
+        // var xml = xmlFormula('testSum',
+        //     xmlRange('A3'),
+        //     xmlSUM(xmlRange('A1:A2')),
+        //     '0',
+        //     '0')
+        // console.log(xml)
+        // workspace.clear()
+        // showBlockly()
+        // xml = Blockly.Xml.textToDom(xml)
+        // Blockly.Xml.domToWorkspace(xml, workspace)
       })
     })
     var statusBar = document.getElementById('statusBar')
@@ -511,5 +512,13 @@ export function clearMessage() {
   var message = document.getElementById('messageText')
   message.innerText = ""
   statusBar.style.display = "none"
+}
+
+export function traverse(current) {
+  console.log('visiting' + current)
+  for (var ck in current) {
+    var child = current(ck);
+    traverse(child)
+  }
 }
 
