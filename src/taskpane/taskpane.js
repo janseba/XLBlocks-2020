@@ -452,7 +452,7 @@ export async function inspectFormula() {
         return response.json();
       })
       .then((data) => {
-        traverse(data)
+        visit(data)
         // var xml = xmlFormula('testSum',
         //     xmlRange('A3'),
         //     xmlSUM(xmlRange('A1:A2')),
@@ -514,11 +514,16 @@ export function clearMessage() {
   statusBar.style.display = "none"
 }
 
-export function traverse(current) {
-  console.log('visiting' + current)
-  for (var ck in current) {
-    var child = current(ck);
-    traverse(child)
+export function visit(obj){
+  var i = 0
+  for (let key in obj) {
+    if (typeof obj[key] === 'object') {
+      visit(obj[key])
+    } else {
+      if (! obj.hasOwnProperty('children')) {
+        console.log(obj)
+      }
+    }
   }
 }
 
