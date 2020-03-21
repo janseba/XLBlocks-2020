@@ -463,6 +463,32 @@ Blockly.JavaScript['fn_subtract'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['fn_multiply'] = function(block) {
+  var value_left_operand = getCode(block, 'left_operand');
+  var value_right_operand = getCode(block, 'right_operand');
+  var leftOperands = value_left_operand.split(',');
+  var rightOperands = value_right_operand.split(',');
+  // TODO: Assemble JavaScript into code variable.
+  var subtractFormulas = new Array();
+
+  if (leftOperands.length === rightOperands.length || rightOperands.length === 1) {
+    for (var i = 0; i < leftOperands.length; i++) {
+      if (rightOperands.length > 1) {
+        multiplyFormulas[i] = leftOperands[i] + '*' + rightOperands[i];  
+      } else {
+        multiplyFormulas[i] = leftOperands[i] + '*' + rightOperands[0];          
+      }
+      
+    }    
+  } else {
+    return undefined;
+  }
+
+  var code = multiplyFormulas.join();
+  // TODO: Change ORDER_NONE to the correct strength.
+  return code;
+};
+
 Blockly.JavaScript['fn_divide'] = function(block) {
   var value_numerator = getCode(block,'numerator');
   var value_denominator = getCode(block, 'denominator');
@@ -481,6 +507,7 @@ Blockly.JavaScript['fn_divide'] = function(block) {
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };
+
 
 Blockly.JavaScript['fn_if_error'] = function(block) {
   var value_formula = getCode(block, 'formula');
