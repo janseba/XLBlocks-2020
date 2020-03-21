@@ -279,3 +279,19 @@ Blockly.Blocks['comments'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['fn_multiply'] = {
+  init: function() {
+    this.appendValueInput("left_operand")
+        .setCheck(null);
+    this.appendDummyInput()
+        .appendField("*");
+    this.appendValueInput("right_operand")
+        .setCheck(null);
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
