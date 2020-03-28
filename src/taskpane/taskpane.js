@@ -452,7 +452,9 @@ export async function inspectFormula() {
         return response.json();
       })
       .then((data) => {
-        visit(data)
+        var output = new Array()
+        visit(data,'', output)
+        console.log(output)
         // var xml = xmlFormula('testSum',
         //     xmlRange('A3'),
         //     xmlSUM(xmlRange('A1:A2')),
@@ -514,14 +516,16 @@ export function clearMessage() {
   statusBar.style.display = "none"
 }
 
-export function visit(obj){
-  var i = 0
+export function visit(obj, str, output){
   for (let key in obj) {
     if (typeof obj[key] === 'object') {
-      visit(obj[key])
+      if (obj.name !== undefined) {
+        str += obj.name + "."
+      }
+      visit(obj[key], str, output)
     } else {
       if (! obj.hasOwnProperty('children')) {
-        console.log(obj)
+        output.push(str + obj.name)
       }
     }
   }
