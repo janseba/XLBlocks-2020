@@ -442,7 +442,7 @@ export async function inspectFormula() {
     await Excel.run(async context => {
       var range = context.workbook.getSelectedRange();
       range.load("formulas");
-      range.load("cellCount");
+      range.load("address");
       await context.sync()
       var url = 'https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula'
       var formula = encodeURI(range.formulas[0]);
@@ -454,7 +454,7 @@ export async function inspectFormula() {
       .then((data) => {
         var output = new Array()
         visit(data,'', output)
-        console.log(output)
+        assembleXml(range.address, output)
         // var xml = xmlFormula('testSum',
         //     xmlRange('A3'),
         //     xmlSUM(xmlRange('A1:A2')),
@@ -483,6 +483,40 @@ export function xmlRange(address) {
 
 export function xmlSUM(parameters) {
   return '<block type="fn_sum"><value name="sum_parameters">' + parameters + '</value></block>'
+}
+
+export function xmlMultiply(leftoperand, rightoperand) {
+  return '<block type="fn_multiply">' +
+            '<value name="leftoperand">' + leftoperand + '</value>' +
+            '<value name="rightoperand">' + rightoperand + '</value>' +
+          '</block>'
+}
+
+export function assembleXml(output, statements) {
+  for (var i = 0; i < statements.length; i++) {
+    if (containsWords(statements[i],["FunctionCall"])) {
+      if (containsWords(statements[i],["*"])) {
+        var leftoperand = statements[i-1].split('"')[1]
+        var rightoperand = statements[i+1].split('"')[1]
+        output = xmlRange(output.split('!')[1])
+        leftoperand = xmlRange(leftoperand)
+        rightoperand = xmlRange(rightoperand)
+        var functions = xmlMultiply(leftoperand, rightoperand)
+        console.log(xmlFormula('test',output,functions,10,10))
+      }
+    }
+  }
+}
+
+export function containsWords(inputString, items) {
+  var found = false
+  for (var i = 0; i < items.length; i++) {
+    if (inputString.includes(items[i])) {
+      found = true
+      break
+    }
+  }
+  return found
 }
 
 export function xmlFormula(name, output, functions, x, y) {
