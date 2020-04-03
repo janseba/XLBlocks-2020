@@ -454,7 +454,8 @@ export async function inspectFormula() {
       .then((data) => {
         var output = new Array()
         visit(data,'', output)
-        assembleXml(range.address, output)
+        var xml = assembleXml(range.address, output)
+        renderXML(xml)
         // var xml = xmlFormula('testSum',
         //     xmlRange('A3'),
         //     xmlSUM(xmlRange('A1:A2')),
@@ -476,6 +477,16 @@ export async function inspectFormula() {
     console.log(error)
   }
 }
+export function renderXML(xml) {
+  try{
+    workspace.clear()
+    showBlockly()
+    xml = Blockly.Xml.textToDom(xml)
+    Blockly.Xml.domToWorkspace(xml, workspace)
+  } catch(error) {
+    console.log(error)
+  }
+}
 
 export function xmlRange(address) {
   return '<block type="range"><field name="range_address">' + address + '</field></block>'
@@ -487,8 +498,8 @@ export function xmlSUM(parameters) {
 
 export function xmlMultiply(leftoperand, rightoperand) {
   return '<block type="fn_multiply">' +
-            '<value name="leftoperand">' + leftoperand + '</value>' +
-            '<value name="rightoperand">' + rightoperand + '</value>' +
+            '<value name="left_operand">' + leftoperand + '</value>' +
+            '<value name="right_operand">' + rightoperand + '</value>' +
           '</block>'
 }
 
@@ -503,6 +514,7 @@ export function assembleXml(output, statements) {
         rightoperand = xmlRange(rightoperand)
         var functions = xmlMultiply(leftoperand, rightoperand)
         console.log(xmlFormula('test',output,functions,10,10))
+        return xmlFormula('test',output, functions, 10, 10)
       }
     }
   }
