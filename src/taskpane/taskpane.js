@@ -444,28 +444,23 @@ export async function inspectFormula() {
       range.load("formulas");
       range.load("address");
       await context.sync()
-      var url = 'https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula'
-      var formula = encodeURI(range.formulas[0]);
+      var url = 'https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula='
+      var formula = encodeURIComponent(String(range.formulas[0]).substr(1));
       url = url + formula
+      console.log(url)
       fetch(url)
       .then((response) => {
         return response.json();
       })
       .then((data) => {
+        processFormula(data)
+        console.log(data)
+        console.log(data.children[0])
         var output = new Array()
         visit(data,'', output)
+        console.log(output)
         var xml = assembleXml(range.address, output)
         renderXML(xml)
-        // var xml = xmlFormula('testSum',
-        //     xmlRange('A3'),
-        //     xmlSUM(xmlRange('A1:A2')),
-        //     '0',
-        //     '0')
-        // console.log(xml)
-        // workspace.clear()
-        // showBlockly()
-        // xml = Blockly.Xml.textToDom(xml)
-        // Blockly.Xml.domToWorkspace(xml, workspace)
       })
     })
     var statusBar = document.getElementById('statusBar')
@@ -477,6 +472,69 @@ export async function inspectFormula() {
     console.log(error)
   }
 }
+
+export function processFormula(formulaTree) {
+  if (formulaTree.children[0].name == 'FunctionCall') {
+    console.log('stap 1: het is een FunctionCall')
+    console.log(formulaTree)
+    processFunctionCall(formulaTree.children[0].children)
+  } else if (formulaTree.children[0].name == 'Reference') {
+    return processReference(formulaTree.children[0].children)
+  }
+}
+
+export function processReference(referenceTree) {
+  if (referenceTree[0].name == 'Cell') {
+    console.log('process reference - het is een cell')
+    console.log(referenceTree[0].children)
+    return processCell(referenceTree[0].children)
+  } else if (referenceTree[0].name == 'ReferenceFunctionCall') {
+    console.log('process reference - het is een ReferenceFunctionCall')
+    console.log(referenceTree[0].children)
+    processReferenceFunctionCall(referenceTree[0].children)   
+  }
+}
+
+export function processReferenceFunctionCall(ReferenceFunctionCallTree) {
+  if (ReferenceFunctionCallTree[1].name == ':') {
+    console.log('Het is een :')
+    processRangeReference(ReferenceFunctionCallTree)
+  }
+}
+
+export function processRangeReference(ReferenceFunctionCallTree) {
+  console.log(processCell(ReferenceFunctionCallTree[0].children[0].children))
+}
+
+export function processCell(cellTree) {
+  var cell = cellTree[0].name.split('"')[1]
+  return cell
+}
+
+export function processFunctionCall(functionCallTree) {
+  if (functionCallTree[0].name == 'FunctionName') {
+    console.log('stap2: het is een Excel functie')
+    processFunctionName(functionCallTree)
+  }
+}
+
+export function processFunctionName(functionCallTree) {
+  if (functionCallTree[0].children[0].name == 'ExcelFunction["VLOOKUP("]') {
+    var functionArguments = functionCallTree[1].children
+    console.log('stap 3: het is een VLOOKUP')
+    processVLOOKUP(functionArguments)
+  }
+}
+
+export function processVLOOKUP(functionArguments) {
+  console.log('stap 4: we gaan aan de slag met de arugmenten')
+  for (var i = 0; i < functionArguments.length; i++) {
+    console.log('argument ' + (i + 1))
+    console.log(functionArguments[i].children[0])
+    console.log(processFormula(functionArguments[i].children[0]))
+  }
+}
+
 export function renderXML(xml) {
   try{
     workspace.clear()
@@ -503,20 +561,38 @@ export function xmlMultiply(leftoperand, rightoperand) {
           '</block>'
 }
 
+export function xmlNumber(number) {
+  try{
+    return '<block type="c_number"><field name="number">' + number + "</field></block>"
+  } catch(error) {
+    console.log(error)
+  }
+}
+
 export function assembleXml(output, statements) {
   for (var i = 0; i < statements.length; i++) {
     if (containsWords(statements[i],["FunctionCall"])) {
       if (containsWords(statements[i],["*"])) {
-        var leftoperand = statements[i-1].split('"')[1]
-        var rightoperand = statements[i+1].split('"')[1]
         output = xmlRange(output.split('!')[1])
-        leftoperand = xmlRange(leftoperand)
-        rightoperand = xmlRange(rightoperand)
+        var leftoperand = xmlOperand(statements[i-1])
+        var rightoperand = xmlOperand(statements[i+1])
         var functions = xmlMultiply(leftoperand, rightoperand)
         console.log(xmlFormula('test',output,functions,10,10))
         return xmlFormula('test',output, functions, 10, 10)
       }
     }
+  }
+}
+
+export function xmlOperand(operand) {
+  try{
+    if (containsWords(operand,["NumberToken"])) {
+      return xmlNumber(operand.split('"')[1])
+    } else if (containsWords(operand,["CellToken"])) {
+      return xmlRange(operand.split('"')[1])
+    }
+  } catch(error) {
+    console.log(error)
   }
 }
 
