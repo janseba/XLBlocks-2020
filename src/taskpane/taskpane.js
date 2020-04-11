@@ -453,7 +453,7 @@ export async function inspectFormula() {
         return response.json();
       })
       .then((data) => {
-        processFormula(data)
+        console.log(processFormula(data))
         console.log(data)
         console.log(data.children[0])
         var output = new Array()
@@ -475,8 +475,6 @@ export async function inspectFormula() {
 
 export function processFormula(formulaTree) {
   if (formulaTree.children[0].name == 'FunctionCall') {
-    console.log('stap 1: het is een FunctionCall')
-    console.log(formulaTree)
     processFunctionCall(formulaTree.children[0].children)
   } else if (formulaTree.children[0].name == 'Reference') {
     return processReference(formulaTree.children[0].children)
@@ -485,25 +483,23 @@ export function processFormula(formulaTree) {
 
 export function processReference(referenceTree) {
   if (referenceTree[0].name == 'Cell') {
-    console.log('process reference - het is een cell')
-    console.log(referenceTree[0].children)
     return processCell(referenceTree[0].children)
   } else if (referenceTree[0].name == 'ReferenceFunctionCall') {
-    console.log('process reference - het is een ReferenceFunctionCall')
-    console.log(referenceTree[0].children)
-    processReferenceFunctionCall(referenceTree[0].children)   
+    return processReferenceFunctionCall(referenceTree[0].children)   
   }
 }
 
 export function processReferenceFunctionCall(ReferenceFunctionCallTree) {
   if (ReferenceFunctionCallTree[1].name == ':') {
-    console.log('Het is een :')
-    processRangeReference(ReferenceFunctionCallTree)
+    return processRangeReference(ReferenceFunctionCallTree)
   }
 }
 
 export function processRangeReference(ReferenceFunctionCallTree) {
-  console.log(processCell(ReferenceFunctionCallTree[0].children[0].children))
+  var leftOperand = processCell(ReferenceFunctionCallTree[0].children[0].children)
+  var operator = ReferenceFunctionCallTree[1].name
+  var rightOperand = processCell(ReferenceFunctionCallTree[2].children[0].children)
+  return leftOperand + operator + rightOperand
 }
 
 export function processCell(cellTree) {
