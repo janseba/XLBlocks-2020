@@ -511,7 +511,18 @@ export function processFunctionCall(functionCallTree) {
   if (functionCallTree[0].name == 'FunctionName') {
     console.log('stap2: het is een Excel functie')
     processFunctionName(functionCallTree)
+  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*'])) {
+    processBinOp(functionCallTree)
   }
+}
+
+export function processBinOp(functionCallTree) {
+  console.log('hier verwerk ik de BinOp')
+  if (functionCallTree[1].name == '+') {
+    console.log('het is addition')
+  }
+  console.log(functionCallTree)
+  console.log(functionCallTree[0].children[0].children)
 }
 
 export function processFunctionName(functionCallTree) {
