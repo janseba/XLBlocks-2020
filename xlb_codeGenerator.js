@@ -485,8 +485,18 @@ Blockly.JavaScript['fn_multiply'] = function(block) {
   }
 
   var code = multiplyFormulas.join();
+  console.log(code)
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
+};
+
+Blockly.JavaScript['fn_binop'] = function(block) {
+  var left_operand = getCode(block, 'left_operand');
+  var right_operand = getCode(block, 'right_operand');
+  var operator = getFieldValue('operator')
+  console.log(operator)
+  var code = left_operand + "+" + right_operand
+  return code
 };
 
 Blockly.JavaScript['fn_divide'] = function(block) {

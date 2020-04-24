@@ -1,6 +1,7 @@
 .vscode/
 assets/
 blockly/
+!blockly/javascript_compressed.js
 dist/
 node_modules/
 src/commands
