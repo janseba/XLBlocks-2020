@@ -256,7 +256,7 @@ Blockly.JavaScript['fn_multiply'] = function(block) {
   }
 
   var code = multiplyFormulas.join();
-  console.log("hallo"+ code)
+  console.log(code)
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };
