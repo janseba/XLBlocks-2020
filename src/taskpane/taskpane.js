@@ -478,7 +478,21 @@ export function processFormula(formulaTree) {
     processFunctionCall(formulaTree.children[0].children)
   } else if (formulaTree.children[0].name == 'Reference') {
     return processReference(formulaTree.children[0].children)
+  } else if (formulaTree.children[0].name == 'Constant') {
+    return processConstant(formulaTree.children[0])
   }
+}
+
+export function processConstant(constantTree) {
+  if (constantTree.children[0].name == 'Number') {
+    return processNumber(constantTree.children[0].children)
+  }
+}
+
+export function processNumber(numberTree) {
+  var number = numberTree[0].name
+  number = number.split('"')[1]
+  return number
 }
 
 export function processReference(referenceTree) {
@@ -522,7 +536,15 @@ export function processBinOp(functionCallTree) {
     console.log('het is addition')
   }
   console.log(functionCallTree)
-  console.log(functionCallTree[0].children[0].children)
+  processAddition(functionCallTree)
+}
+
+export function processAddition(functionCallTree) {
+  console.log('processAddition')
+  var leftOperand = processFormula(functionCallTree[0])
+  console.log(leftOperand)
+  var rightOperand = processFormula(functionCallTree[2])
+  console.log(rightOperand)
 }
 
 export function processFunctionName(functionCallTree) {
@@ -566,6 +588,12 @@ export function xmlMultiply(leftoperand, rightoperand) {
             '<value name="left_operand">' + leftoperand + '</value>' +
             '<value name="right_operand">' + rightoperand + '</value>' +
           '</block>'
+}
+export function xmlAddition(leftOperand, rightOperand) {
+  return '<block type="fn_multiply">' +
+            '<value name="left_operand">' + leftoperand + '</value>' +
+            '<value name="right_operand">' + rightoperand + '</value>' +
+          '</block>'  
 }
 
 export function xmlNumber(number) {
