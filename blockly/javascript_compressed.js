@@ -256,17 +256,38 @@ Blockly.JavaScript['fn_multiply'] = function(block) {
   }
 
   var code = multiplyFormulas.join();
-  console.log(code)
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };
 
 Blockly.JavaScript['fn_binop'] = function(block) {
   var left_operand = getCode(block, 'left_operand');
+  left_operand = left_operand.split(',')
   var right_operand = getCode(block, 'right_operand');
-  var operator = getFieldValue('operator')
-  console.log(operator)
-  var code = left_operand + "+" + right_operand
+  right_operand = right_operand.split(',')
+  var operator = block.getFieldValue('operator')
+  switch (operator) {
+  	case 'add':
+  		operator = '+';
+  		break;
+  	case 'subtract':
+  		operator = '-';
+  		break;
+  }
+  var binopFormulas = new Array();
+  if (left_operand.length === right_operand.length || right_operand.length === 1) {
+  	for (var i = 0; i < left_operand.length; i++) {
+  		if (right_operand > 1) {
+  			binopFormulas[i] = left_operand[i] + operator + right_operand[i]
+  		} else {
+  			binopFormulas[i] = left_operand[i] + operator + right_operand[0]
+  		}
+  	}
+  } else {
+  	return undefined;
+  }
+  var code = binopFormulas.join();
+  console.log(code)
   return code
 };
 
