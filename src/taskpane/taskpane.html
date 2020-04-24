@@ -77,50 +77,49 @@
 
 	<script type="text/javascript" src="node_modules/core-js/client/core.js"></script>
 
-	<xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
-	  <category name="Functions">
-	    <block type="fn_sum"></block>
-	    <block type="fn_sumifs">
-	      <statement name="filter_statements">
-	        <block type="fn_sumifs_filters"></block>
-	      </statement>
-	    </block>
-	    <block type="fn_sumifs_filters"></block>
-	    <block type="lookup"></block>
-	    <block type="fn_subtract"></block>
-	    <block type="fn_divide"></block>
-	    <block type="fn_if_error"></block>
-	    <block type="fn_if"></block>
-	    <block type="fn_greater_than"></block>
-	    <block type="fn_less_than"></block>
-	    <block type="fn_multiply"></block>
-	  </category>
-	  <category name="Cell References">
-	    <block type="range">
-	      <field name="range_address">range</field>
-	    </block>
-	    <block type="for_each_row"></block>
-	    <block type="for_each_column"></block>
-	  </category>
-	  <category name="Workbook Management">
-	  <block type="formula">
-	    <field name="formula_name">formula name</field>
-	    <value name="output">
-	    </value>
-	  </block>
-	  </category>
-	  <category name="Constants">
-	    <block type="c_number">
-	      <field name="number">0</field>
-	    </block>
-	    <block type="c_text">
-	      <field name="text"></field>
-	    </block>
-	    <block type="comments">
-	      <field name="comment_text"></field>
-	    </block>
-	  </category>
-	</xml>
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+  <category name="Functions">
+    <block type="fn_sum"></block>
+    <block type="fn_sumifs">
+      <statement name="filter_statements">
+        <block type="fn_sumifs_filters"></block>
+      </statement>
+    </block>
+    <block type="fn_sumifs_filters"></block>
+    <block type="fn_if_error"></block>
+    <block type="lookup"></block>
+    <block type="fn_if"></block>
+    <block type="fn_add"></block>
+    <block type="fn_subtract"></block>
+    <block type="fn_divide"></block>
+    <block type="fn_multiply"></block>
+    <block type="fn_greater_than"></block>
+    <block type="fn_less_than"></block>
+  </category>
+  <category name="Cell References">
+    <block type="range">
+      <field name="range_address">range</field>
+    </block>
+    <block type="for_each_row"></block>
+    <block type="for_each_column"></block>
+  </category>
+  <category name="Workbook Management">
+    <block type="formula">
+      <field name="formula_name">formula name</field>
+    </block>
+  </category>
+  <category name="Constants">
+    <block type="c_number">
+      <field name="number">0</field>
+    </block>
+    <block type="c_text">
+      <field name="text"></field>
+    </block>
+    <block type="comments">
+      <field name="comment_text"></field>
+    </block>
+  </category>
+</xml>
 
 	<script type="text/javascript">
 	</script>

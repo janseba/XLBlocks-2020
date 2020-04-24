@@ -542,9 +542,8 @@ export function processBinOp(functionCallTree) {
 export function processAddition(functionCallTree) {
   console.log('processAddition')
   var leftOperand = processFormula(functionCallTree[0])
-  console.log(leftOperand)
   var rightOperand = processFormula(functionCallTree[2])
-  console.log(rightOperand)
+  console.log(xmlAddition(leftOperand, rightOperand))
 }
 
 export function processFunctionName(functionCallTree) {
@@ -590,9 +589,9 @@ export function xmlMultiply(leftoperand, rightoperand) {
           '</block>'
 }
 export function xmlAddition(leftOperand, rightOperand) {
-  return '<block type="fn_multiply">' +
-            '<value name="left_operand">' + leftoperand + '</value>' +
-            '<value name="right_operand">' + rightoperand + '</value>' +
+  return '<block type="fn_add">' +
+            '<value name="left_operand">' + leftOperand + '</value>' +
+            '<value name="right_operand">' + rightOperand + '</value>' +
           '</block>'  
 }
 

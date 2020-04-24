@@ -311,3 +311,19 @@ Blockly.Blocks['fn_add'] = {
  this.setHelpUrl("");
   }
 }
+
+Blockly.Blocks['fn_binop'] = {
+  init: function() {
+    this.appendValueInput("left_operand")
+        .setCheck(null);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["+","add"], ["-","subtract"]]), "operator");
+    this.appendValueInput("right_operand")
+        .setCheck(null);
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
