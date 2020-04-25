@@ -273,11 +273,23 @@ Blockly.JavaScript['fn_binop'] = function(block) {
   	case 'subtract':
   		operator = '-';
   		break;
+  	case 'divide':
+  		operator = '/'
+  		break;
+  	case 'gt':
+  		operator = '>'
+  		break;
+  	case 'lt':
+  		operator = '<'
+  		break;
+  	case 'multiply':
+  		operator = '*'
+  		break;
   }
   var binopFormulas = new Array();
   if (left_operand.length === right_operand.length || right_operand.length === 1) {
   	for (var i = 0; i < left_operand.length; i++) {
-  		if (right_operand > 1) {
+  		if (right_operand.length > 1) {
   			binopFormulas[i] = left_operand[i] + operator + right_operand[i]
   		} else {
   			binopFormulas[i] = left_operand[i] + operator + right_operand[0]
