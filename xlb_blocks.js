@@ -317,7 +317,7 @@ Blockly.Blocks['fn_binop'] = {
     this.appendValueInput("left_operand")
         .setCheck(null);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["+","add"], ["-","subtract"]]), "operator");
+        .appendField(new Blockly.FieldDropdown([["*","multiply"], ["/","divide"], ["+","add"], ["-","subtract"], [">","gt"], ["<","lt"]]), "operator");
     this.appendValueInput("right_operand")
         .setCheck(null);
     this.setInputsInline(true);
