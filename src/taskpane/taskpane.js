@@ -453,14 +453,16 @@ export async function inspectFormula() {
         return response.json();
       })
       .then((data) => {
-        console.log(processFormula(data))
-        console.log(data)
-        console.log(data.children[0])
-        var output = new Array()
-        visit(data,'', output)
-        console.log(output)
-        var xml = assembleXml(range.address, output)
-        renderXML(xml)
+        var output = xmlRange(range.address.split("!")[1])
+        renderXML(xmlFormula("current cell", output, processFormula(data), 10, 10))
+
+        //console.log(data)
+        //console.log(data.children[0])
+        //var output = new Array()
+        //visit(data,'', output)
+        //console.log(output)
+        //var xml = assembleXml(range.address, output)
+        //renderXML(xml)
       })
     })
     var statusBar = document.getElementById('statusBar')
@@ -475,7 +477,7 @@ export async function inspectFormula() {
 
 export function processFormula(formulaTree) {
   if (formulaTree.children[0].name == 'FunctionCall') {
-    processFunctionCall(formulaTree.children[0].children)
+    return processFunctionCall(formulaTree.children[0].children)
   } else if (formulaTree.children[0].name == 'Reference') {
     return processReference(formulaTree.children[0].children)
   } else if (formulaTree.children[0].name == 'Constant') {
@@ -492,7 +494,7 @@ export function processConstant(constantTree) {
 export function processNumber(numberTree) {
   var number = numberTree[0].name
   number = number.split('"')[1]
-  return number
+  return xmlNumber(number)
 }
 
 export function processReference(referenceTree) {
@@ -513,37 +515,35 @@ export function processRangeReference(ReferenceFunctionCallTree) {
   var leftOperand = processCell(ReferenceFunctionCallTree[0].children[0].children)
   var operator = ReferenceFunctionCallTree[1].name
   var rightOperand = processCell(ReferenceFunctionCallTree[2].children[0].children)
-  return leftOperand + operator + rightOperand
+  console.log(xmlRange(leftOperand + operator + rightOperand))
+  return xmlRange(leftOperand + operator + rightOperand)
 }
 
 export function processCell(cellTree) {
   var cell = cellTree[0].name.split('"')[1]
-  return cell
+  return xmlRange(cell)
 }
 
 export function processFunctionCall(functionCallTree) {
   if (functionCallTree[0].name == 'FunctionName') {
-    console.log('stap2: het is een Excel functie')
-    processFunctionName(functionCallTree)
+    return processFunctionName(functionCallTree)
   } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*'])) {
-    processBinOp(functionCallTree)
+    return processBinOp(functionCallTree)
   }
 }
 
 export function processBinOp(functionCallTree) {
   console.log('hier verwerk ik de BinOp')
   if (functionCallTree[1].name == '+') {
-    console.log('het is addition')
+    return processAddition(functionCallTree)
   }
-  console.log(functionCallTree)
-  processAddition(functionCallTree)
 }
 
 export function processAddition(functionCallTree) {
   console.log('processAddition')
   var leftOperand = processFormula(functionCallTree[0])
   var rightOperand = processFormula(functionCallTree[2])
-  console.log(xmlAddition(leftOperand, rightOperand))
+  return xmlAddition(leftOperand, rightOperand)
 }
 
 export function processFunctionName(functionCallTree) {
@@ -589,7 +589,8 @@ export function xmlMultiply(leftoperand, rightoperand) {
           '</block>'
 }
 export function xmlAddition(leftOperand, rightOperand) {
-  return '<block type="fn_add">' +
+  return '<block type="fn_binop">' +
+            '<field name="operator">add</field>' +
             '<value name="left_operand">' + leftOperand + '</value>' +
             '<value name="right_operand">' + rightOperand + '</value>' +
           '</block>'  
