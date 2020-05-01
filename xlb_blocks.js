@@ -327,3 +327,30 @@ Blockly.Blocks['fn_binop'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['fn_vlookup'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("VLOOKUP");
+    this.appendValueInput("lookup_value")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Lookup value");
+    this.appendValueInput("table_array")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Table array");
+    this.appendValueInput("col_index_num")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Column Index Nr");
+    this.appendValueInput("range_lookup")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("Range Lookup");
+    this.setOutput(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
