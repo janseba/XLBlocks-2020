@@ -35,7 +35,7 @@ Blockly.Blocks['range'] = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldTextInput("range"), "range_address");
     this.setInputsInline(true);
-    this.setOutput(true, null);
+    this.setOutput(true, "range");
     this.setColour(65);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -59,10 +59,10 @@ Blockly.Blocks['fn_sum'] = {
 Blockly.Blocks['for_each_row'] = {
   init: function() {
     this.appendValueInput("range_each_row_in_range")
-        .setCheck(null)
+        .setCheck("range")
         .appendField("EACH ROW");
     this.setInputsInline(true);
-    this.setOutput(true, null);
+    this.setOutput(true, "metaRange");
     this.setColour(65);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -72,10 +72,10 @@ Blockly.Blocks['for_each_row'] = {
 Blockly.Blocks['for_each_column'] = {
   init: function() {
     this.appendValueInput("range_each_column_in_range")
-        .setCheck(null)
+        .setCheck("range")
         .appendField("EACH COLUMN");
     this.setInputsInline(true);
-    this.setOutput(true, null);
+    this.setOutput(true, "metaRange");
     this.setColour(65);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -333,15 +333,15 @@ Blockly.Blocks['fn_vlookup'] = {
     this.appendDummyInput()
         .appendField("VLOOKUP");
     this.appendValueInput("lookup_value")
-        .setCheck(null)
+        .setCheck(["metaRange", "range"])
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Lookup value");
     this.appendValueInput("table_array")
-        .setCheck(null)
+        .setCheck("range")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Table array");
     this.appendValueInput("col_index_num")
-        .setCheck(null)
+        .setCheck("range")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Column Index Nr");
     this.appendValueInput("range_lookup")
