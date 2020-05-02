@@ -91,6 +91,9 @@
     </value>
     <value name="OUTPUTTYPE">
       <shadow id="V*Li]9nGkmjm:)^.*;pV" type="type_null"></shadow>
+      <block id="8:2)~V$gk~v-PAxuJ}6v" type="type_other">
+        <field name="TYPE">range</field>
+      </block>
     </value>
     <value name="COLOUR">
       <block id="RhnnIzV27N,(e-{:r.RR" type="colour_hue">
@@ -157,6 +160,9 @@
         </statement>
         <value name="TYPE">
           <shadow id="vatP7Aoi5b(S2/;W.i4o" type="type_null"></shadow>
+          <block id="/T]n5kvAbRd}2#)L+3sl" type="type_other">
+            <field name="TYPE">range</field>
+          </block>
         </value>
       </block>
     </statement>
@@ -172,6 +178,9 @@
     </value>
     <value name="OUTPUTTYPE">
       <shadow id="siNsQ4Jg9;/jIJ~QCu(k" type="type_null"></shadow>
+      <block id="`qm[U)`v,L!R]UE8]gve" type="type_other">
+        <field name="TYPE">metaRange</field>
+      </block>
     </value>
     <value name="COLOUR">
       <block id="n~oPR:b@Ii{2OFOD$kVn" type="colour_hue">
@@ -195,6 +204,9 @@
         </statement>
         <value name="TYPE">
           <shadow id="PM(D4SM26KQhD;9OBo,t" type="type_null"></shadow>
+          <block id="ZinUPY;9)(k1K3Ob:+Y@" type="type_other">
+            <field name="TYPE">range</field>
+          </block>
         </value>
       </block>
     </statement>
@@ -210,6 +222,9 @@
     </value>
     <value name="OUTPUTTYPE">
       <shadow id="w7#O09f8=~:Hn8wo17`]" type="type_null"></shadow>
+      <block id="GcO78FsT?L^OdG1sv_UK" type="type_other">
+        <field name="TYPE">metaRange</field>
+      </block>
     </value>
     <value name="COLOUR">
       <block id="/d$}-R`r~Hi8@ZN0]h:h" type="colour_hue">
@@ -685,6 +700,19 @@
             </statement>
             <value name="TYPE">
               <shadow id="eX[P2LB$me``N^?C1S4;" type="type_null"></shadow>
+              <block id="3lI:mko2,9hBZ#IQKUWH" type="type_group">
+                <mutation types="2"></mutation>
+                <value name="TYPE0">
+                  <block id="zj|2VpYDP[Xv!e)KW!pi" type="type_other">
+                    <field name="TYPE">metaRange</field>
+                  </block>
+                </value>
+                <value name="TYPE1">
+                  <block id="?qlM}@1C1hiWEmIl^OX2" type="type_other">
+                    <field name="TYPE">range</field>
+                  </block>
+                </value>
+              </block>
             </value>
             <next>
               <block id=".t4Ux^f2h^/).QA`XLEW" type="input_value">
@@ -697,6 +725,9 @@
                 </statement>
                 <value name="TYPE">
                   <shadow id=":jg(%j]D68mC`NUbTF]." type="type_null"></shadow>
+                  <block id="B*e1|lOao!v3#eok,(8=" type="type_other">
+                    <field name="TYPE">range</field>
+                  </block>
                 </value>
                 <next>
                   <block id="5rV0T^Wk$m,vV8n#(JzU" type="input_value">
@@ -709,6 +740,9 @@
                     </statement>
                     <value name="TYPE">
                       <shadow id="uh?^uL64R|(V}IiCerA2" type="type_null"></shadow>
+                      <block id="7Ghmd!xJ.g?16|S~cM=R" type="type_other">
+                        <field name="TYPE">range</field>
+                      </block>
                     </value>
                     <next>
                       <block id="~A[!M`QvtbYcnFojAb0J" type="input_value">
