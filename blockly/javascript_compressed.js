@@ -477,6 +477,21 @@ Blockly.JavaScript['fn_sumifs_filters'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['fn_vlookup'] = function(block) {
+  var value_lookup_value = Blockly.JavaScript.valueToCode(block, 'lookup_value', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_table_array = Blockly.JavaScript.valueToCode(block, 'table_array', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_col_index_num = Blockly.JavaScript.valueToCode(block, 'col_index_num', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_range_lookup = Blockly.JavaScript.valueToCode(block, 'range_lookup', Blockly.JavaScript.ORDER_ATOMIC);
+  value_lookup_value = value_lookup_value.split(',')
+  var vlookupFormulas = new Array();
+  for (var i = 0; i < value_lookup_value.length; i++) {
+  	vlookupFormulas[i] = 'VLOOKUP(' + value_lookup_value[i] + '|' + value_table_array + '|' + value_col_index_num + '|' + 'FALSE' + ')'
+  }
+  var code = vlookupFormulas.join();
+  // TODO: Change ORDER_NONE to the correct strength.
+  return code;
+};
+
 // helper functions
 
 function getCode(block, inputName) {
