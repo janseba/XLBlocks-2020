@@ -539,15 +539,10 @@ export function processFunctionCall(functionCallTree) {
 }
 
 export function processBinOp(functionCallTree) {
-  if (functionCallTree[1].name == '+') {
-    return processAddition(functionCallTree)
-  }
-}
-
-export function processAddition(functionCallTree) {
   var leftOperand = processFormula(functionCallTree[0])
+  var operator = functionCallTree[1].name
   var rightOperand = processFormula(functionCallTree[2])
-  return xmlAddition(leftOperand, rightOperand)
+  return xmlBinop(leftOperand, operator, rightOperand)
 }
 
 export function processFunctionName(functionCallTree) {
@@ -593,15 +588,28 @@ export function xmlVLOOKUP(lookupValue, tableArray, colIndexNumber, rangeLookup)
           '</block>'
 }
 
-export function xmlMultiply(leftoperand, rightoperand) {
-  return '<block type="fn_multiply">' +
-            '<value name="left_operand">' + leftoperand + '</value>' +
-            '<value name="right_operand">' + rightoperand + '</value>' +
-          '</block>'
-}
-export function xmlAddition(leftOperand, rightOperand) {
-  return '<block type="fn_binop">' +
-            '<field name="operator">add</field>' +
+export function xmlBinop(leftOperand, operator, rightOperand) {
+  switch(operator) {
+    case '+':
+      operator = 'add'
+      break;
+    case '-':
+      operator = 'subtract'
+      break;
+    case '/':
+      operator = 'divide'
+      break;
+    case '>':
+      operator = 'gt'
+      break;
+    case '<':
+      operator = 'lt'
+    case '*':
+      operator = 'multiply'
+      break;
+  }
+  return  '<block type="fn_binop">' +
+            '<field name="operator">' +  operator + '</field>' +
             '<value name="left_operand">' + leftOperand + '</value>' +
             '<value name="right_operand">' + rightOperand + '</value>' +
           '</block>'  
