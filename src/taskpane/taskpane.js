@@ -502,7 +502,7 @@ export function processNumber(numberTree) {
 export function processBool(boolTree) {
   var bool = boolTree[0].name
   bool = bool.split('"')[1]
-  console.log(bool)
+  console.log(xmlBool(bool))
 }
 
 export function processReference(referenceTree) {
@@ -607,6 +607,14 @@ export function xmlAddition(leftOperand, rightOperand) {
 export function xmlNumber(number) {
   try{
     return '<block type="c_number"><field name="number">' + number + "</field></block>"
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+export function xmlBool(bool) {
+  try{
+    return '<block type="c_bool"><field name="true_false">' + bool + "</field></block>"
   } catch(error) {
     console.log(error)
   }
