@@ -354,3 +354,16 @@ Blockly.Blocks['fn_vlookup'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['c_bool'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("boolean")
+        .appendField(new Blockly.FieldDropdown([["TRUE","true"], ["FALSE","false"]]), "true_false");
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setColour(160);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};

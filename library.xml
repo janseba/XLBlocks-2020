@@ -785,4 +785,48 @@
         <field name="HUE">120</field>
       </block>
     </value>
+  </block><block type="factory_base" id="s,=Bh?`)bZ0rO%culm~6" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"></mutation>
+    <field name="NAME">c_bool</field>
+    <field name="INLINE">INT</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="LLz[;LP+GcxF%U2UfZNt">
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="j)S+,Urv%Pn!`h^SlT/g">
+            <field name="TEXT">boolean</field>
+            <next>
+              <block type="field_dropdown" id="IuX]WjIAKXpvaA],6#u^">
+                <mutation options="[&quot;text&quot;,&quot;text&quot;]"></mutation>
+                <field name="FIELDNAME">true_false</field>
+                <field name="USER0">TRUE</field>
+                <field name="CPU0">true</field>
+                <field name="USER1">FALSE</field>
+                <field name="CPU1">false</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="IPHzk2b!,Ff[6@`tvR6+" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="Id^FB/vAfdL3r]`OGjEe" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="@U,ssAwkZ^K*Iq#y8Ovd"></shadow>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="ZsBje/{#_OQh]aeA^TAQ">
+        <mutation colour="#5ba58c"></mutation>
+        <field name="HUE">160</field>
+      </block>
+    </value>
   </block></xml>

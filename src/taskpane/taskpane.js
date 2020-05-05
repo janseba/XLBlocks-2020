@@ -488,6 +488,8 @@ export function processFormula(formulaTree) {
 export function processConstant(constantTree) {
   if (constantTree.children[0].name == 'Number') {
     return processNumber(constantTree.children[0].children)
+  } else if (constantTree.children[0].name == 'Bool') {
+    return processBool(constantTree.children[0].children)
   }
 }
 
@@ -495,6 +497,12 @@ export function processNumber(numberTree) {
   var number = numberTree[0].name
   number = number.split('"')[1]
   return xmlNumber(number)
+}
+
+export function processBool(boolTree) {
+  var bool = boolTree[0].name
+  bool = bool.split('"')[1]
+  console.log(bool)
 }
 
 export function processReference(referenceTree) {
@@ -512,10 +520,10 @@ export function processReferenceFunctionCall(ReferenceFunctionCallTree) {
 }
 
 export function processRangeReference(ReferenceFunctionCallTree) {
-  var leftOperand = processCell(ReferenceFunctionCallTree[0].children[0].children)
+  var leftOperand = ReferenceFunctionCallTree[0].children[0].children[0].name.split('"')[1]
   var operator = ReferenceFunctionCallTree[1].name
-  var rightOperand = processCell(ReferenceFunctionCallTree[2].children[0].children)
-  console.log(xmlRange(leftOperand + operator + rightOperand))
+  var rightOperand = ReferenceFunctionCallTree[2].children[0].children[0].name.split('"')[1]
+  console.log('processRangeReference' + xmlRange(leftOperand + operator + rightOperand))
   return xmlRange(leftOperand + operator + rightOperand)
 }
 

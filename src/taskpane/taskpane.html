@@ -87,11 +87,17 @@
     </block>
     <block type="fn_sumifs_filters"></block>
     <block type="fn_if_error"></block>
+    <block type="fn_vlookup">
+      <value name="range_lookup">
+        <block type="c_bool">
+          <field name="true_false">false</field>
+        </block>
+      </value>
+    </block>
     <block type="lookup"></block>
-    <block type="fn_vlookup"></block>
     <block type="fn_if"></block>
     <block type="fn_binop">
-      <field name="operator">add</field>
+      <field name="operator">multiply</field>
     </block>
   </category>
   <category name="Cell References">
@@ -113,9 +119,13 @@
     <block type="c_text">
       <field name="text"></field>
     </block>
+    <block type="c_bool">
+      <field name="true_false">true</field>
+    </block>
     <block type="comments">
       <field name="comment_text"></field>
     </block>
+    <block type="fn_sumifs_filters"></block>
   </category>
 </xml>
 
