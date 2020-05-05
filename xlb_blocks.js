@@ -359,7 +359,7 @@ Blockly.Blocks['c_bool'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("boolean")
-        .appendField(new Blockly.FieldDropdown([["TRUE","true"], ["FALSE","false"]]), "true_false");
+        .appendField(new Blockly.FieldDropdown([["TRUE","TRUE"], ["FALSE","FALSE"]]), "true_false");
     this.setInputsInline(true);
     this.setOutput(true, null);
     this.setColour(160);

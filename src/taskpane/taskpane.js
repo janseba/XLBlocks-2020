@@ -447,7 +447,6 @@ export async function inspectFormula() {
       var url = 'https://xlparser.perfectxl.nl/demo/Parse.json?version=120&formula='
       var formula = encodeURIComponent(String(range.formulas[0]).substr(1));
       url = url + formula
-      console.log(url)
       fetch(url)
       .then((response) => {
         return response.json();
@@ -502,7 +501,7 @@ export function processNumber(numberTree) {
 export function processBool(boolTree) {
   var bool = boolTree[0].name
   bool = bool.split('"')[1]
-  console.log(xmlBool(bool))
+  return xmlBool(bool)
 }
 
 export function processReference(referenceTree) {
@@ -523,7 +522,6 @@ export function processRangeReference(ReferenceFunctionCallTree) {
   var leftOperand = ReferenceFunctionCallTree[0].children[0].children[0].name.split('"')[1]
   var operator = ReferenceFunctionCallTree[1].name
   var rightOperand = ReferenceFunctionCallTree[2].children[0].children[0].name.split('"')[1]
-  console.log('processRangeReference' + xmlRange(leftOperand + operator + rightOperand))
   return xmlRange(leftOperand + operator + rightOperand)
 }
 
@@ -541,14 +539,12 @@ export function processFunctionCall(functionCallTree) {
 }
 
 export function processBinOp(functionCallTree) {
-  console.log('hier verwerk ik de BinOp')
   if (functionCallTree[1].name == '+') {
     return processAddition(functionCallTree)
   }
 }
 
 export function processAddition(functionCallTree) {
-  console.log('processAddition')
   var leftOperand = processFormula(functionCallTree[0])
   var rightOperand = processFormula(functionCallTree[2])
   return xmlAddition(leftOperand, rightOperand)
@@ -557,18 +553,16 @@ export function processAddition(functionCallTree) {
 export function processFunctionName(functionCallTree) {
   if (functionCallTree[0].children[0].name == 'ExcelFunction["VLOOKUP("]') {
     var functionArguments = functionCallTree[1].children
-    console.log('stap 3: het is een VLOOKUP')
-    processVLOOKUP(functionArguments)
+    return processVLOOKUP(functionArguments)
   }
 }
 
 export function processVLOOKUP(functionArguments) {
-  console.log('stap 4: we gaan aan de slag met de arugmenten')
+  var vlookupArguments = new Array()
   for (var i = 0; i < functionArguments.length; i++) {
-    console.log('argument ' + (i + 1))
-    console.log(functionArguments[i].children[0])
-    console.log(processFormula(functionArguments[i].children[0]))
+    vlookupArguments.push(processFormula(functionArguments[i].children[0]))
   }
+  return xmlVLOOKUP(vlookupArguments[0],vlookupArguments[1],vlookupArguments[2],vlookupArguments[3])
 }
 
 export function renderXML(xml) {
@@ -588,6 +582,15 @@ export function xmlRange(address) {
 
 export function xmlSUM(parameters) {
   return '<block type="fn_sum"><value name="sum_parameters">' + parameters + '</value></block>'
+}
+
+export function xmlVLOOKUP(lookupValue, tableArray, colIndexNumber, rangeLookup) {
+  return  '<block type="fn_vlookup">' +
+            '<value name="lookup_value">' + lookupValue + '</value>' +
+            '<value name="table_array">' + tableArray + '</value>' +
+            '<value name="col_index_num">' + colIndexNumber + '</value>' +
+            '<value name="range_lookup">' + rangeLookup + '</value>' +
+          '</block>'
 }
 
 export function xmlMultiply(leftoperand, rightoperand) {
