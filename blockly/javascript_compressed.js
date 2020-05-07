@@ -285,6 +285,9 @@ Blockly.JavaScript['fn_binop'] = function(block) {
   	case 'multiply':
   		operator = '*'
   		break;
+  	case 'eq':
+  		operator = '='
+  		break;
   }
   var binopFormulas = new Array();
   if (left_operand.length === right_operand.length || right_operand.length === 1) {
@@ -333,6 +336,20 @@ Blockly.JavaScript['fn_if_error'] = function(block) {
     ifErrorFormulas[i] = 'IFERROR(' + formulas[i] + "|" + value_if_error + ')'
   }
   var code = ifErrorFormulas.join();
+  // TODO: Change ORDER_NONE to the correct strength.
+  return code;
+};
+
+Blockly.JavaScript['fn_round'] = function(block) {
+  var value_number = getCode(block, 'number');
+  var value_num_digits = getCode(block, 'num_digits');
+  value_number = value_number.split(',');
+  var roundFormulas = new Array();
+  // TODO: Assemble JavaScript into code variable.
+  for (var i = 0; i < value_number.length; i++) {
+  	roundFormulas[i] = 'ROUND(' + value_number[i] + '|' + value_num_digits + ')'
+  }
+  var code = roundFormulas.join();
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };

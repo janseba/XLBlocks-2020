@@ -181,7 +181,7 @@ Blockly.Blocks['c_number'] = {
     this.appendDummyInput()
         .appendField("number")
         .appendField(new Blockly.FieldNumber(0), "number");
-    this.setOutput(true, null);
+    this.setOutput(true, "number");
     this.setColour(160);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -317,7 +317,7 @@ Blockly.Blocks['fn_binop'] = {
     this.appendValueInput("left_operand")
         .setCheck(null);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["*","multiply"], ["/","divide"], ["+","add"], ["-","subtract"], [">","gt"], ["<","lt"]]), "operator");
+        .appendField(new Blockly.FieldDropdown([["*","multiply"], ["/","divide"], ["+","add"], ["-","subtract"], [">","gt"], ["<","lt"], ["=","eq"]]), "operator");
     this.appendValueInput("right_operand")
         .setCheck(null);
     this.setInputsInline(true);
@@ -359,10 +359,31 @@ Blockly.Blocks['c_bool'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("boolean")
-        .appendField(new Blockly.FieldDropdown([["TRUE","TRUE"], ["FALSE","FALSE"]]), "true_false");
+        .appendField(new Blockly.FieldDropdown([["TRUE","true"], ["FALSE","false"]]), "true_false");
     this.setInputsInline(true);
     this.setOutput(true, null);
     this.setColour(160);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['fn_round'] = {
+  init: function() {
+    this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("ROUND");
+    this.appendValueInput("number")
+        .setCheck(["metaRange", "range"])
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("number");
+    this.appendValueInput("num_digits")
+        .setCheck(["range", "number"])
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("number of digits");
+    this.setInputsInline(false);
+    this.setOutput(true, "function");
+    this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
   }

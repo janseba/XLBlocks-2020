@@ -489,6 +489,8 @@ export function processConstant(constantTree) {
     return processNumber(constantTree.children[0].children)
   } else if (constantTree.children[0].name == 'Bool') {
     return processBool(constantTree.children[0].children)
+  } else if (constantTree.children[0].name == 'Text') {
+    return processText(constantTree.children[0].children)
   }
 }
 
@@ -504,6 +506,13 @@ export function processBool(boolTree) {
   return xmlBool(bool)
 }
 
+export function processText(textTree) {
+  var text = textTree[0].name
+  console.log(text)
+  text = text.split('"')[2]
+  return xmlText(text)
+}
+
 export function processReference(referenceTree) {
   if (referenceTree[0].name == 'Cell') {
     return processCell(referenceTree[0].children)
@@ -513,9 +522,11 @@ export function processReference(referenceTree) {
 }
 
 export function processReferenceFunctionCall(ReferenceFunctionCallTree) {
+  console.log(ReferenceFunctionCallTree)
   if (ReferenceFunctionCallTree[1].name == ':') {
     return processRangeReference(ReferenceFunctionCallTree)
-  }
+  } else if (ReferenceFunctionCallTree[0].name == 'RefFunctionName')
+    return processRefFunctionName(ReferenceFunctionCallTree)
 }
 
 export function processRangeReference(ReferenceFunctionCallTree) {
@@ -523,6 +534,13 @@ export function processRangeReference(ReferenceFunctionCallTree) {
   var operator = ReferenceFunctionCallTree[1].name
   var rightOperand = ReferenceFunctionCallTree[2].children[0].children[0].name.split('"')[1]
   return xmlRange(leftOperand + operator + rightOperand)
+}
+
+export function processRefFunctionName(ReferenceFunctionCallTree) {
+  if (ReferenceFunctionCallTree[0].children[0].name == 'ExcelConditionalRefFunctionToken["IF("]') {
+    var functionArguments = ReferenceFunctionCallTree[1].children
+    return processIF(functionArguments)
+  }
 }
 
 export function processCell(cellTree) {
@@ -533,7 +551,7 @@ export function processCell(cellTree) {
 export function processFunctionCall(functionCallTree) {
   if (functionCallTree[0].name == 'FunctionName') {
     return processFunctionName(functionCallTree)
-  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*'])) {
+  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*','='])) {
     return processBinOp(functionCallTree)
   }
 }
@@ -558,6 +576,15 @@ export function processVLOOKUP(functionArguments) {
     vlookupArguments.push(processFormula(functionArguments[i].children[0]))
   }
   return xmlVLOOKUP(vlookupArguments[0],vlookupArguments[1],vlookupArguments[2],vlookupArguments[3])
+}
+
+export function processIF(functionArguments) {
+  var ifArguments = new Array()
+  for (var i = 0; i < functionArguments.length; i++) {
+     ifArguments.push(processFormula(functionArguments[i].children[0]))
+     console.log('step' + i + processFormula(functionArguments[i].children[0]))
+   }
+   return xmlIF(ifArguments[0],ifArguments[1],ifArguments[2]) 
 }
 
 export function renderXML(xml) {
@@ -588,6 +615,14 @@ export function xmlVLOOKUP(lookupValue, tableArray, colIndexNumber, rangeLookup)
           '</block>'
 }
 
+export function xmlIF(test, when_true, when_false) {
+  return  '<block type="fn_if">' +
+            '<value name="test">' + test + '</value>' +
+            '<value name="when_true">' + when_true + '</value>' +
+            '<value name="when_false">' + when_false + '</value>' +
+          '</block>'
+}
+
 export function xmlBinop(leftOperand, operator, rightOperand) {
   switch(operator) {
     case '+':
@@ -606,6 +641,9 @@ export function xmlBinop(leftOperand, operator, rightOperand) {
       operator = 'lt'
     case '*':
       operator = 'multiply'
+      break;
+    case '=':
+      operator = 'eq'
       break;
   }
   return  '<block type="fn_binop">' +
@@ -626,6 +664,14 @@ export function xmlNumber(number) {
 export function xmlBool(bool) {
   try{
     return '<block type="c_bool"><field name="true_false">' + bool + "</field></block>"
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+export function xmlText(text) {
+  try{
+    return '<block type="c_text"><field name="text">' + text + "</field></block>"   
   } catch(error) {
     console.log(error)
   }
