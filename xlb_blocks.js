@@ -341,7 +341,7 @@ Blockly.Blocks['fn_vlookup'] = {
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Table array");
     this.appendValueInput("col_index_num")
-        .setCheck("range")
+        .setCheck(["range", "number"])
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("Column Index Nr");
     this.appendValueInput("range_lookup")

@@ -681,85 +681,95 @@
         <field name="HUE">120</field>
       </block>
     </value>
-  </block><block id="96),6!,Om62]NVq8K#F-" type="factory_base" y="10" x="10" movable="false" deletable="false">
+  </block><block type="factory_base" id="96),6!,Om62]NVq8K#F-" deletable="false" movable="false" x="10" y="10">
     <mutation connections="LEFT"></mutation>
     <field name="NAME">fn_vlookup</field>
     <field name="INLINE">AUTO</field>
     <field name="CONNECTIONS">LEFT</field>
     <statement name="INPUTS">
-      <block id="z#,/S$P8{Tj;;76{!6VB" type="input_dummy">
+      <block type="input_dummy" id="z#,/S$P8{Tj;;76{!6VB">
         <field name="ALIGN">LEFT</field>
         <statement name="FIELDS">
-          <block id="w@/C07L#w}HE%onsz?ct" type="field_static">
+          <block type="field_static" id="w@/C07L#w}HE%onsz?ct">
             <field name="TEXT">VLOOKUP</field>
           </block>
         </statement>
         <next>
-          <block id="E9~iPihtg*~E[LIJ!LX`" type="input_value">
+          <block type="input_value" id="E9~iPihtg*~E[LIJ!LX`">
             <field name="INPUTNAME">lookup_value</field>
             <field name="ALIGN">RIGHT</field>
             <statement name="FIELDS">
-              <block id="a;DG#Rs(yA#Qh,|#vc|r" type="field_static">
+              <block type="field_static" id="a;DG#Rs(yA#Qh,|#vc|r">
                 <field name="TEXT">Lookup value</field>
               </block>
             </statement>
             <value name="TYPE">
               <shadow id="eX[P2LB$me``N^?C1S4;" type="type_null"></shadow>
-              <block id="3lI:mko2,9hBZ#IQKUWH" type="type_group">
+              <block type="type_group" id="3lI:mko2,9hBZ#IQKUWH">
                 <mutation types="2"></mutation>
                 <value name="TYPE0">
-                  <block id="zj|2VpYDP[Xv!e)KW!pi" type="type_other">
+                  <block type="type_other" id="zj|2VpYDP[Xv!e)KW!pi">
                     <field name="TYPE">metaRange</field>
                   </block>
                 </value>
                 <value name="TYPE1">
-                  <block id="?qlM}@1C1hiWEmIl^OX2" type="type_other">
+                  <block type="type_other" id="?qlM}@1C1hiWEmIl^OX2">
                     <field name="TYPE">range</field>
                   </block>
                 </value>
               </block>
             </value>
             <next>
-              <block id=".t4Ux^f2h^/).QA`XLEW" type="input_value">
+              <block type="input_value" id=".t4Ux^f2h^/).QA`XLEW">
                 <field name="INPUTNAME">table_array</field>
                 <field name="ALIGN">RIGHT</field>
                 <statement name="FIELDS">
-                  <block id="VdGvNMa1}.pjxTHw7NkQ" type="field_static">
+                  <block type="field_static" id="VdGvNMa1}.pjxTHw7NkQ">
                     <field name="TEXT">Table array</field>
                   </block>
                 </statement>
                 <value name="TYPE">
                   <shadow id=":jg(%j]D68mC`NUbTF]." type="type_null"></shadow>
-                  <block id="B*e1|lOao!v3#eok,(8=" type="type_other">
+                  <block type="type_other" id="B*e1|lOao!v3#eok,(8=">
                     <field name="TYPE">range</field>
                   </block>
                 </value>
                 <next>
-                  <block id="5rV0T^Wk$m,vV8n#(JzU" type="input_value">
+                  <block type="input_value" id="5rV0T^Wk$m,vV8n#(JzU">
                     <field name="INPUTNAME">col_index_num</field>
                     <field name="ALIGN">RIGHT</field>
                     <statement name="FIELDS">
-                      <block id="F^Hc_oeh~R35(mMPQXOj" type="field_static">
+                      <block type="field_static" id="F^Hc_oeh~R35(mMPQXOj">
                         <field name="TEXT">Column Index Nr</field>
                       </block>
                     </statement>
                     <value name="TYPE">
-                      <shadow id="uh?^uL64R|(V}IiCerA2" type="type_null"></shadow>
-                      <block id="7Ghmd!xJ.g?16|S~cM=R" type="type_other">
-                        <field name="TYPE">range</field>
+                      <shadow type="type_null" id="uh?^uL64R|(V}IiCerA2"></shadow>
+                      <block type="type_group" id="^dr%BqFaNL:pOSy{jF!R">
+                        <mutation types="2"></mutation>
+                        <value name="TYPE0">
+                          <block type="type_other" id="7Ghmd!xJ.g?16|S~cM=R">
+                            <field name="TYPE">range</field>
+                          </block>
+                        </value>
+                        <value name="TYPE1">
+                          <block type="type_other" id=";GMWE5}_2%QB4Kq_G+oY">
+                            <field name="TYPE">number</field>
+                          </block>
+                        </value>
                       </block>
                     </value>
                     <next>
-                      <block id="~A[!M`QvtbYcnFojAb0J" type="input_value">
+                      <block type="input_value" id="~A[!M`QvtbYcnFojAb0J">
                         <field name="INPUTNAME">range_lookup</field>
                         <field name="ALIGN">RIGHT</field>
                         <statement name="FIELDS">
-                          <block id="ZBH$*Sz.`tczcm[bB/jG" type="field_static">
+                          <block type="field_static" id="ZBH$*Sz.`tczcm[bB/jG">
                             <field name="TEXT">Range Lookup</field>
                           </block>
                         </statement>
                         <value name="TYPE">
-                          <shadow id="1QcCv#8rb~1#@T*f.{RS" type="type_null"></shadow>
+                          <shadow type="type_null" id="1QcCv#8rb~1#@T*f.{RS"></shadow>
                         </value>
                       </block>
                     </next>
@@ -772,20 +782,20 @@
       </block>
     </statement>
     <value name="TOOLTIP">
-      <block id="o_fWNNqu?-%OBjZr5H?6" type="text" movable="false" deletable="false">
+      <block type="text" id="o_fWNNqu?-%OBjZr5H?6" deletable="false" movable="false">
         <field name="TEXT"></field>
       </block>
     </value>
     <value name="HELPURL">
-      <block id=")(hW7B1Qw;m799FUqy+U" type="text" movable="false" deletable="false">
+      <block type="text" id=")(hW7B1Qw;m799FUqy+U" deletable="false" movable="false">
         <field name="TEXT"></field>
       </block>
     </value>
     <value name="OUTPUTTYPE">
-      <shadow id="BaUB%m`/C:bPhXQf1HrE" type="type_null"></shadow>
+      <shadow type="type_null" id="BaUB%m`/C:bPhXQf1HrE"></shadow>
     </value>
     <value name="COLOUR">
-      <block id="fLqC5.}qigYd#~,#]/`p" type="colour_hue">
+      <block type="colour_hue" id="fLqC5.}qigYd#~,#]/`p">
         <mutation colour="#5ba55b"></mutation>
         <field name="HUE">120</field>
       </block>
