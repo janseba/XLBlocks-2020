@@ -311,7 +311,6 @@ export function sheetExists(sheets, name) {
 export function getWorkspace() {
   try {
     var xml = Blockly.Xml.workspaceToDom(workspace, false);
-    console.log(Blockly.Xml.domToPrettyText(xml))
     var ws = {id:getFormulaID(xml), name:getFormulaName(xml), fullXML:Blockly.Xml.domToText(xml), outputRange:getFormulaOutput(xml)}   
     return ws;
   } catch (error) {
@@ -454,21 +453,13 @@ export async function inspectFormula() {
       .then((data) => {
         var output = xmlRange(range.address.split("!")[1])
         renderXML(xmlFormula("current cell", output, processFormula(data), 10, 10))
-
-        //console.log(data)
-        //console.log(data.children[0])
-        //var output = new Array()
-        //visit(data,'', output)
-        //console.log(output)
-        //var xml = assembleXml(range.address, output)
-        //renderXML(xml)
       })
     })
-    var statusBar = document.getElementById('statusBar')
-    statusBar.style.display = "block"
-    var message = document.getElementById('messageText')
-    message.innerText = 'hallo'
-    document.getElementById("clearMessage").onclick=clearMessage
+    // var statusBar = document.getElementById('statusBar')
+    // statusBar.style.display = "block"
+    // var message = document.getElementById('messageText')
+    // message.innerText = 'hallo'
+    // document.getElementById("clearMessage").onclick=clearMessage
   } catch(error) {
     console.log(error)
   }
@@ -478,9 +469,11 @@ export function processFormula(formulaTree) {
   if (formulaTree.children[0].name == 'FunctionCall') {
     return processFunctionCall(formulaTree.children[0].children)
   } else if (formulaTree.children[0].name == 'Reference') {
-    return processReference(formulaTree.children[0].children)
+      return processReference(formulaTree.children[0].children)
   } else if (formulaTree.children[0].name == 'Constant') {
-    return processConstant(formulaTree.children[0])
+      return processConstant(formulaTree.children[0])
+  } else if (formulaTree.children[0].name == 'Formula') {
+      return processFormula(formulaTree.children[0])
   }
 }
 
@@ -508,7 +501,6 @@ export function processBool(boolTree) {
 
 export function processText(textTree) {
   var text = textTree[0].name
-  console.log(text)
   text = text.split('"')[2]
   return xmlText(text)
 }
@@ -522,7 +514,6 @@ export function processReference(referenceTree) {
 }
 
 export function processReferenceFunctionCall(ReferenceFunctionCallTree) {
-  console.log(ReferenceFunctionCallTree)
   if (ReferenceFunctionCallTree[1].name == ':') {
     return processRangeReference(ReferenceFunctionCallTree)
   } else if (ReferenceFunctionCallTree[0].name == 'RefFunctionName')
@@ -551,7 +542,7 @@ export function processCell(cellTree) {
 export function processFunctionCall(functionCallTree) {
   if (functionCallTree[0].name == 'FunctionName') {
     return processFunctionName(functionCallTree)
-  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*','='])) {
+  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*', '/','=','<','>'])) {
     return processBinOp(functionCallTree)
   }
 }
@@ -564,10 +555,20 @@ export function processBinOp(functionCallTree) {
 }
 
 export function processFunctionName(functionCallTree) {
+  var functionArguments = functionCallTree[1].children
   if (functionCallTree[0].children[0].name == 'ExcelFunction["VLOOKUP("]') {
-    var functionArguments = functionCallTree[1].children
     return processVLOOKUP(functionArguments)
+  } else if (functionCallTree[0].children[0].name == 'ExcelFunction["ROUND("]') {
+    return processROUND(functionArguments)
   }
+}
+
+export function processROUND(functionArguments) {
+  var roundArguments = new Array()
+  for (var i = 0; i < functionArguments.length; i++) {
+    roundArguments.push(processFormula(functionArguments[i].children[0]))
+  }
+  return xmlROUND(roundArguments[0],roundArguments[1])
 }
 
 export function processVLOOKUP(functionArguments) {
@@ -582,7 +583,6 @@ export function processIF(functionArguments) {
   var ifArguments = new Array()
   for (var i = 0; i < functionArguments.length; i++) {
      ifArguments.push(processFormula(functionArguments[i].children[0]))
-     console.log('step' + i + processFormula(functionArguments[i].children[0]))
    }
    return xmlIF(ifArguments[0],ifArguments[1],ifArguments[2]) 
 }
@@ -623,6 +623,13 @@ export function xmlIF(test, when_true, when_false) {
           '</block>'
 }
 
+export function xmlROUND(number, num_digits) {
+  return  '<block type="fn_round">' +
+            '<value name="number">' + number + '</value>' +
+            '<value name="num_digits">' + num_digits + '</value>' +
+          '</block>'
+}
+
 export function xmlBinop(leftOperand, operator, rightOperand) {
   switch(operator) {
     case '+':
@@ -639,6 +646,7 @@ export function xmlBinop(leftOperand, operator, rightOperand) {
       break;
     case '<':
       operator = 'lt'
+      break;
     case '*':
       operator = 'multiply'
       break;
