@@ -388,3 +388,36 @@ Blockly.Blocks['fn_round'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['fn_or'] = {
+  init: function() {
+    this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("OR");
+    this.appendStatementInput("logic_conditions")
+        .setCheck(null);
+    this.setOutput(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+Blockly.Blocks['fn_logic_condition'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("logic condition");
+    this.appendValueInput("left_condition")
+        .setCheck(null);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([["=","eq"], ["<","lt"], [">","gt"], ["<=","le"], [">=","ge"], ["<>","ne"]]), "operator");
+    this.appendValueInput("right_condition")
+        .setCheck(null);
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(160);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
