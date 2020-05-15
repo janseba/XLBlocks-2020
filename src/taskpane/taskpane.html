@@ -90,15 +90,25 @@
     <block type="fn_vlookup">
       <value name="range_lookup">
         <block type="c_bool">
-          <field name="true_false">false</field>
+          <field name="true_false">FALSE</field>
         </block>
       </value>
     </block>
     <block type="lookup"></block>
     <block type="fn_if"></block>
-    <block type ="fn_round"></block>
+    <block type="fn_round"></block>
     <block type="fn_binop">
       <field name="operator">multiply</field>
+    </block>
+    <block type="fn_or">
+      <statement name="logic_conditions">
+        <block type="fn_logic_condition">
+          <field name="operator">eq</field>
+        </block>
+      </statement>
+    </block>
+    <block type="fn_logic_condition">
+      <field name="operator">eq</field>
     </block>
   </category>
   <category name="Cell References">
@@ -121,7 +131,7 @@
       <field name="text"></field>
     </block>
     <block type="c_bool">
-      <field name="true_false">true</field>
+      <field name="true_false">TRUE</field>
     </block>
     <block type="comments">
       <field name="comment_text"></field>
