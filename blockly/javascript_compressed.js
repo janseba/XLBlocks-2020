@@ -517,6 +517,15 @@ Blockly.JavaScript['fn_vlookup'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['fn_logic_condition'] = function(block) {
+  var value_left_condition = Blockly.JavaScript.valueToCode(block, 'left_condition', Blockly.JavaScript.ORDER_ATOMIC);
+  var dropdown_operator = block.getFieldValue('operator');
+  var value_right_condition = Blockly.JavaScript.valueToCode(block, 'right_condition', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = 1;
+  return code;
+};
+
 // helper functions
 
 function getCode(block, inputName) {
