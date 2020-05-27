@@ -421,3 +421,27 @@ Blockly.Blocks['fn_logic_condition'] = {
  this.setHelpUrl("");
   }
 };
+
+Blockly.Blocks['fn_mid'] = {
+  init: function() {
+    this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("MID");
+    this.appendValueInput("text")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("text");
+    this.appendValueInput("start_num")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("start_num");
+    this.appendValueInput("num_chars")
+        .setCheck(null)
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("num_chars");
+    this.setOutput(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};

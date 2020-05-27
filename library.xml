@@ -816,9 +816,9 @@
                 <mutation options="[&quot;text&quot;,&quot;text&quot;]"></mutation>
                 <field name="FIELDNAME">true_false</field>
                 <field name="USER0">TRUE</field>
-                <field name="CPU0">true</field>
+                <field name="CPU0">TRUE</field>
                 <field name="USER1">FALSE</field>
-                <field name="CPU1">false</field>
+                <field name="CPU1">FALSE</field>
               </block>
             </next>
           </block>
@@ -1054,6 +1054,82 @@
       <block type="colour_hue" id="+2.Y6UZ+|6Qsag/WLxsw">
         <mutation colour="#5ba58c"></mutation>
         <field name="HUE">160</field>
+      </block>
+    </value>
+  </block><block type="factory_base" id="2jD_%Q2?@,6w.1(QPiKv" deletable="false" movable="false" x="10" y="10">
+    <mutation connections="LEFT"></mutation>
+    <field name="NAME">fn_mid</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">LEFT</field>
+    <statement name="INPUTS">
+      <block type="input_dummy" id="D#U/bI,SV8:_rO|7c^U{">
+        <field name="ALIGN">RIGHT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="S,GrEob({RebjDkUe]$1">
+            <field name="TEXT">MID</field>
+          </block>
+        </statement>
+        <next>
+          <block type="input_value" id="osxT$OM)Xe/M`s$0qfPE">
+            <field name="INPUTNAME">text</field>
+            <field name="ALIGN">RIGHT</field>
+            <statement name="FIELDS">
+              <block type="field_static" id="xqHQpPT[Gl$D/]*~05-Y">
+                <field name="TEXT">text</field>
+              </block>
+            </statement>
+            <value name="TYPE">
+              <shadow type="type_null" id="t].YM=Q(`L~Lq3h]J%}."></shadow>
+            </value>
+            <next>
+              <block type="input_value" id="@u2$|iGt@{q5j~?,]QH3">
+                <field name="INPUTNAME">start_num</field>
+                <field name="ALIGN">RIGHT</field>
+                <statement name="FIELDS">
+                  <block type="field_static" id="4Yd7;@^@5Dk|hpi1~*Mm">
+                    <field name="TEXT">start_num</field>
+                  </block>
+                </statement>
+                <value name="TYPE">
+                  <shadow type="type_null" id=")o|bRg~}_d^BQ#598n:W"></shadow>
+                </value>
+                <next>
+                  <block type="input_value" id="Ly)mJgLJY]IsgoFaG=Z?">
+                    <field name="INPUTNAME">num_chars</field>
+                    <field name="ALIGN">RIGHT</field>
+                    <statement name="FIELDS">
+                      <block type="field_static" id="|wtVBRK$`!j%*?E@MMpd">
+                        <field name="TEXT">num_chars</field>
+                      </block>
+                    </statement>
+                    <value name="TYPE">
+                      <shadow type="type_null" id="74o7W2i|MA!bP$4JXLni"></shadow>
+                    </value>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="TOOLTIP">
+      <block type="text" id="Az*FCK3HI@?v!eVCSG#?" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="HELPURL">
+      <block type="text" id="]GF/XH^UVhz1x+kKB9os" deletable="false" movable="false">
+        <field name="TEXT"></field>
+      </block>
+    </value>
+    <value name="OUTPUTTYPE">
+      <shadow type="type_null" id="~-@e]x9iWh:u;DP;)pe4"></shadow>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="+W4j~P;0GW54?;3/I#cS">
+        <mutation colour="#5ba55b"></mutation>
+        <field name="HUE">120</field>
       </block>
     </value>
   </block></xml>
