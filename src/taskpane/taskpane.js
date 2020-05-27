@@ -560,7 +560,17 @@ export function processFunctionName(functionCallTree) {
     return processVLOOKUP(functionArguments)
   } else if (functionCallTree[0].children[0].name == 'ExcelFunction["ROUND("]') {
     return processROUND(functionArguments)
+  } else if (functionCallTree[0].children[0].name == 'ExcelFunction["OR("]') {
+    return processOR(functionArguments)
   }
+}
+
+export function processOR(functionArguments) {
+  var orArguments = new Array()
+  for (var i = 0; i < functionArguments.length; i++) {
+    orArguments[i] = processFormula(functionArguments[i].children[0])
+  }
+  return xmlOR(orArguments)
 }
 
 export function processROUND(functionArguments) {
@@ -683,6 +693,26 @@ export function xmlText(text) {
   } catch(error) {
     console.log(error)
   }
+}
+
+export function xmlOR(orArguments) {
+  var xml = '<block type="fn_or"><statement name="logic_conditions">'
+  for (var i = 0; i < orArguments.length; i++) {
+    orArguments[i] = orArguments[i].replace('fn_binop', 'fn_logic_condition')
+    orArguments[i] = orArguments[i].replace('left_operand', 'left_condition')
+    orArguments[i] = orArguments[i].replace('right_operand', 'right_condition')
+    if (i < orArguments.length -1) {
+      orArguments[i] = orArguments[i].substring(0,orArguments[i].lastIndexOf('<')) + '<next>'
+    }
+    console.log(orArguments[i])
+  }
+  xml += orArguments.join()
+  for (var i = 0; i < orArguments.length -1; i++) {
+    xml += '</next></block>'
+  }
+  xml += '</statement></block>'
+  console.log(xml)
+  return xml
 }
 
 export function assembleXml(output, statements) {

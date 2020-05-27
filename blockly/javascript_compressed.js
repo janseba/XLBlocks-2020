@@ -522,7 +522,93 @@ Blockly.JavaScript['fn_logic_condition'] = function(block) {
   var dropdown_operator = block.getFieldValue('operator');
   var value_right_condition = Blockly.JavaScript.valueToCode(block, 'right_condition', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var code = 1;
+  switch (dropdown_operator) {
+  	case 'eq':
+  		dropdown_operator = '=';
+  		break;
+  	case 'ne':
+  		dropdown_operator = '<>';
+  		break;
+  	case 'lt':
+  		dropdown_operator = '<';
+  		break;
+  	case 'le':
+  		dropdown_operator = '<=';
+  		break;
+  	case 'gt':
+  		dropdown_operator = '>';
+  		break;
+  	case 'ge':
+  		dropdown_operator = '>=';
+  		break;
+  }
+  var left_conditions = value_left_condition.split(',')
+  var right_conditions = value_right_condition.split(',')
+  var conditionBlocks = new Array();
+  if (left_conditions.length == right_conditions.length || left_conditions.length ==1 || right_conditions.length == 1) {
+  	if (left_conditions.length == right_conditions.length) {
+  		for (var i = 0; i < left_conditions.length; i++) {
+  			conditionBlocks[i] = left_conditions[i] + dropdown_operator + right_conditions[i]
+  		}
+  	} else if (left_conditions.length == 1) {
+  		for (var i = 0; i < right_conditions.length; i++) {
+  			conditionBlocks[i] = left_conditions[0] + dropdown_operator + right_conditions[i]
+  		}
+  	} else if (right_conditions.length == 1) {
+  		for (var i = 0; i < left_conditions.length; i++) {
+  			conditionBlocks[i] = left_conditions[i] + dropdown_operator + right_conditions[0]
+  		}
+  	}
+  } 
+
+  var code = conditionBlocks.join() + '#'
+  console.log('fn_logic_condition: ' + code)
+  return code;
+};
+
+Blockly.JavaScript['fn_or'] = function(block) {
+  var statements_logic_conditions = Blockly.JavaScript.statementToCode(block, 'logic_conditions').trim().slice(0,-1).split('#');
+  // TODO: Assemble JavaScript into code variable.
+  var forEachCount = 0
+  var orFormulas = new Array();
+  for (var i = 0; i < statements_logic_conditions.length; i++) { // iterate over OR conditions
+  	var conditions = statements_logic_conditions[i].split(',')
+  	if (conditions.length > 1) {
+  		if (forEachCount == 0) {
+  			forEachCount = conditions.length
+  		} else if (forEachCount != conditions.length) {
+  			forEachCount = undefined
+  		}
+  	}
+  }
+  if (forEachCount==0) {
+  	var code = 'OR('
+  	for (var i = 0; i < statements_logic_conditions.length; i++) {
+  		code = code + statements_logic_conditions[i] + '|'
+  	}
+  	code = code.substring(0, code.length-1)
+  	code += ')'
+  } else if (forEachCount > 1) {
+  	for (var j = 0; j < forEachCount; j++) {
+  		orFormulas[j] = 'OR('
+  		for (var i = 0; i < statements_logic_conditions.length; i++) {
+  			conditions = statements_logic_conditions[i].split(',')
+  			if (conditions.length > 1) {
+  				orFormulas[j] += conditions[j] + '|'
+   			} else {
+   				orFormulas[j] += conditions[0]
+   			}
+  		}
+  		orFormulas[j] += ')'
+  	}
+  } else if (forEachCount== undefined) {
+  	var code = 'error: unbalanced for each blocks'
+  }
+  
+  if (code == undefined) {
+  	code = orFormulas.join()
+  }
+  // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };
 
