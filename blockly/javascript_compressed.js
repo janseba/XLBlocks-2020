@@ -612,6 +612,54 @@ Blockly.JavaScript['fn_or'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['fn_mid'] = function(block) {
+  var value_text = getCode(block, 'text').split(',')
+  var value_start_num = getCode(block, 'start_num').split(',')
+  var value_num_chars = getCode(block, 'num_chars').split(',')
+  var functionArguments = new Array()
+  functionArguments.push(value_text)
+  functionArguments.push(value_start_num)
+  functionArguments.push(value_num_chars)
+  console.log('text: ' + value_text.length)
+  console.log('start: ' + value_start_num.length)
+  console.log('num_chars: ' + value_num_chars.length)
+  console.log('max length: ' + Math.max(value_text.length, 
+  		value_start_num.length, value_num_chars.length))
+  var maxLength = Math.max(value_text.length, 
+  		value_start_num.length, value_num_chars.length)
+  if (maxLength == 1) {
+  	var code = 'MID('+ value_text + '|' + value_start_num + '|'
+  		+ value_num_chars + ')'
+  } else {
+  	var balancedForEach = true
+  	for (var i = 0; i < functionArguments.length; i++) {
+  		if (functionArguments[i].length!= 1 && functionArguments[i].length != maxLength) {
+  			balancedForEach = false
+  			break;
+  		}
+  	}
+  	if (balancedForEach) {
+  		var midFormulas = new Array()
+  		for (var i = 0; i < maxLength; i++) {
+  			var text
+  			var start
+  			var chars
+  			(value_text.length == 1) ? (text = value_text) : (text = value_text[i]);
+  			(value_start_num.length == 1) ? (start = value_start_num) : (start = value_start_num[i]);
+  			(value_num_chars.length == 1) ? (chars = value_num_chars) : (chars = value_num_chars[i]);
+  			midFormulas[i] = 'MID(' + text + '|' + start + '|' + chars + ')'
+  		}
+  		var code = midFormulas.join()
+  	} else {
+  		var code = 'unbalanced for each'
+  	}
+  }
+  // TODO: Assemble JavaScript into code variable.
+  // var code = 'MID(A1|2|3)';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return code;
+};
+
 // helper functions
 
 function getCode(block, inputName) {
