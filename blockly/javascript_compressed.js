@@ -620,11 +620,6 @@ Blockly.JavaScript['fn_mid'] = function(block) {
   functionArguments.push(value_text)
   functionArguments.push(value_start_num)
   functionArguments.push(value_num_chars)
-  console.log('text: ' + value_text.length)
-  console.log('start: ' + value_start_num.length)
-  console.log('num_chars: ' + value_num_chars.length)
-  console.log('max length: ' + Math.max(value_text.length, 
-  		value_start_num.length, value_num_chars.length))
   var maxLength = Math.max(value_text.length, 
   		value_start_num.length, value_num_chars.length)
   if (maxLength == 1) {

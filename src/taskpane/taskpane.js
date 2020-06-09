@@ -562,7 +562,17 @@ export function processFunctionName(functionCallTree) {
     return processROUND(functionArguments)
   } else if (functionCallTree[0].children[0].name == 'ExcelFunction["OR("]') {
     return processOR(functionArguments)
+  } else if (functionCallTree[0].children[0].name == 'ExcelFunction["MID("]') {
+    return processMID(functionArguments);
   }
+}
+
+export function processMID(functionArguments) {
+  var midArguments = new Array()
+  for (var i = 0; i < functionArguments.length; i++) {
+    midArguments[i] = processFormula(functionArguments[i].children[0]);
+  }
+  return xmlMID(midArguments);
 }
 
 export function processOR(functionArguments) {
@@ -704,15 +714,28 @@ export function xmlOR(orArguments) {
     if (i < orArguments.length -1) {
       orArguments[i] = orArguments[i].substring(0,orArguments[i].lastIndexOf('<')) + '<next>'
     }
-    console.log(orArguments[i])
   }
   xml += orArguments.join()
   for (var i = 0; i < orArguments.length -1; i++) {
     xml += '</next></block>'
   }
   xml += '</statement></block>'
-  console.log(xml)
   return xml
+}
+
+export function xmlMID(midArguments) {
+  var xml = '<block type="fn_mid">' +
+              '<value name="text">' +
+                midArguments[0] +
+              '</value>' +
+              '<value name="start_num">' +
+                midArguments[1] +
+              '</value>' +
+              '<value name="num_chars">' +
+                midArguments[2] +
+              '</value>' +
+            '</block>';
+  return xml;
 }
 
 export function assembleXml(output, statements) {
@@ -723,7 +746,6 @@ export function assembleXml(output, statements) {
         var leftoperand = xmlOperand(statements[i-1])
         var rightoperand = xmlOperand(statements[i+1])
         var functions = xmlMultiply(leftoperand, rightoperand)
-        console.log(xmlFormula('test',output,functions,10,10))
         return xmlFormula('test',output, functions, 10, 10)
       }
     }
