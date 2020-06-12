@@ -562,8 +562,7 @@ Blockly.JavaScript['fn_logic_condition'] = function(block) {
   } 
 
   var code = conditionBlocks.join() + '#'
-  console.log('fn_logic_condition: ' + code)
-  return code;
+    return code;
 };
 
 Blockly.JavaScript['fn_or'] = function(block) {
@@ -687,6 +686,9 @@ Blockly.JavaScript['fn_and'] = function(block) {
    			} else {
    				andFormulas[j] += conditions[0]
    			}
+  		}
+  		if (conditions.length > 1) {
+  			andFormulas[j] = andFormulas[j].substring(0, andFormulas[j].length - 1)
   		}
   		andFormulas[j] += ')'
   	}
