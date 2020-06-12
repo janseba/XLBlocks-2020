@@ -445,3 +445,16 @@ Blockly.Blocks['fn_mid'] = {
  this.setHelpUrl("");
   }
 };
+Blockly.Blocks['fn_and'] = {
+  init: function() {
+    this.appendDummyInput()
+        .setAlign(Blockly.ALIGN_RIGHT)
+        .appendField("AND");
+    this.appendStatementInput("logic_conditions")
+        .setCheck(null);
+    this.setOutput(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
