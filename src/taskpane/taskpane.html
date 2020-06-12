@@ -104,11 +104,28 @@
       <statement name="logic_conditions">
         <block type="fn_logic_condition">
           <field name="operator">eq</field>
+          <next>
+            <block type="fn_logic_condition">
+              <field name="operator">eq</field>
+            </block>
+          </next>
         </block>
       </statement>
     </block>
     <block type="fn_logic_condition">
       <field name="operator">eq</field>
+    </block>
+    <block type="fn_and">
+      <statement name="logic_conditions">
+        <block type="fn_logic_condition">
+          <field name="operator">eq</field>
+          <next>
+            <block type="fn_logic_condition">
+              <field name="operator">eq</field>
+            </block>
+          </next>
+        </block>
+      </statement>
     </block>
     <block type="fn_mid"></block>
   </category>
