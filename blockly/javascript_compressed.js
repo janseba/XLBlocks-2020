@@ -655,6 +655,52 @@ Blockly.JavaScript['fn_mid'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['fn_and'] = function(block) {
+  var statements_logic_conditions = Blockly.JavaScript.statementToCode(block, 'logic_conditions').trim().slice(0,-1).split('#');
+  // TODO: Assemble JavaScript into code variable.
+  var forEachCount = 0
+  var andFormulas = new Array();
+  for (var i = 0; i < statements_logic_conditions.length; i++) { // iterate over OR conditions
+  	var conditions = statements_logic_conditions[i].split(',')
+  	if (conditions.length > 1) {
+  		if (forEachCount == 0) {
+  			forEachCount = conditions.length
+  		} else if (forEachCount != conditions.length) {
+  			forEachCount = undefined
+  		}
+  	}
+  }
+  if (forEachCount==0) {
+  	var code = 'AND('
+  	for (var i = 0; i < statements_logic_conditions.length; i++) {
+  		code = code + statements_logic_conditions[i] + '|'
+  	}
+  	code = code.substring(0, code.length-1)
+  	code += ')'
+  } else if (forEachCount > 1) {
+  	for (var j = 0; j < forEachCount; j++) {
+  		andFormulas[j] = 'AND('
+  		for (var i = 0; i < statements_logic_conditions.length; i++) {
+  			conditions = statements_logic_conditions[i].split(',')
+  			if (conditions.length > 1) {
+  				andFormulas[j] += conditions[j] + '|'
+   			} else {
+   				andFormulas[j] += conditions[0]
+   			}
+  		}
+  		andFormulas[j] += ')'
+  	}
+  } else if (forEachCount== undefined) {
+  	var code = 'error: unbalanced for each blocks'
+  }
+  
+  if (code == undefined) {
+  	code = andFormulas.join()
+  }
+  // TODO: Change ORDER_NONE to the correct strength.
+  return code;
+};
+
 // helper functions
 
 function getCode(block, inputName) {
