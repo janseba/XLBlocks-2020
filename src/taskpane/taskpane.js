@@ -564,7 +564,17 @@ export function processFunctionName(functionCallTree) {
     return processOR(functionArguments)
   } else if (functionCallTree[0].children[0].name == 'ExcelFunction["MID("]') {
     return processMID(functionArguments);
+  } else if (functionCallTree[0].children[0].name == 'ExcelFunction["AND("]') {
+    return processAND (functionArguments);
   }
+}
+
+export function processAND(functionArguments) {
+  var andArguments = new Array()
+  for (var i = 0; i < functionArguments.length; i++) {
+    andArguments[i] = processFormula(functionArguments[i].children[0])
+  }
+  return xmlAND(andArguments)
 }
 
 export function processMID(functionArguments) {
@@ -717,6 +727,24 @@ export function xmlOR(orArguments) {
   }
   xml += orArguments.join()
   for (var i = 0; i < orArguments.length -1; i++) {
+    xml += '</next></block>'
+  }
+  xml += '</statement></block>'
+  return xml
+}
+
+export function xmlAND(andArguments) {
+  var xml = '<block type="fn_and"><statement name="logic_conditions">'
+  for (var i = 0; i < andArguments.length; i++) {
+    andArguments[i] = andArguments[i].replace('fn_binop', 'fn_logic_condition')
+    andArguments[i] = andArguments[i].replace('left_operand', 'left_condition')
+    andArguments[i] = andArguments[i].replace('right_operand', 'right_condition')
+    if (i < andArguments.length -1) {
+      andArguments[i] = andArguments[i].substring(0,andArguments[i].lastIndexOf('<')) + '<next>'
+    }
+  }
+  xml += andArguments.join()
+  for (var i = 0; i < andArguments.length -1; i++) {
     xml += '</next></block>'
   }
   xml += '</statement></block>'
