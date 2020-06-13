@@ -565,8 +565,15 @@ export function processFunctionName(functionCallTree) {
   } else if (functionCallTree[0].children[0].name == 'ExcelFunction["MID("]') {
     return processMID(functionArguments);
   } else if (functionCallTree[0].children[0].name == 'ExcelFunction["AND("]') {
-    return processAND (functionArguments);
+    return processAND(functionArguments);
+  } else if (functionCallTree[0].children[0].name == 'ExcelFunction["SUM("]') {
+    return processSUM(functionArguments);
   }
+}
+
+export function processSUM(functionArguments) {
+  var sumArgument = processFormula(functionArguments[0].children[0]);
+  return xmlSUM(sumArgument);
 }
 
 export function processAND(functionArguments) {
