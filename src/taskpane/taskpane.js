@@ -542,7 +542,7 @@ export function processCell(cellTree) {
 export function processFunctionCall(functionCallTree) {
   if (functionCallTree[0].name == 'FunctionName') {
     return processFunctionName(functionCallTree)
-  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*', '/','=','<','>'])) {
+  } else if (functionCallTree[0].name == 'Formula' && containsWords(functionCallTree[1].name,['+','*','/','=','<','>','-'])) {
     return processBinOp(functionCallTree)
   }
 }
