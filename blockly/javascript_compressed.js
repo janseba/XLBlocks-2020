@@ -175,7 +175,7 @@ Blockly.JavaScript['formula'] = function(block) {
   var outputRange = Blockly.JavaScript.valueToCode(block, 'output', Blockly.JavaScript.ORDER_ATOMIC);
   var noRows = getNoRows(outputRange);
   var noColumns = getNoColumns(outputRange);
-  var statements = Blockly.JavaScript.statementToCode(block, 'statements').trim();
+  var statements = Blockly.JavaScript.valueToCode(block, 'statements', Blockly.JavaScript.ORDER_NONE).trim();
   var formula = new Object();
   formula.formulaName = text_formula_name;
   statements = statements.split(',');
@@ -261,34 +261,45 @@ Blockly.JavaScript['fn_multiply'] = function(block) {
 };
 
 Blockly.JavaScript['fn_binop'] = function(block) {
-  var left_operand = getCode(block, 'left_operand');
-  left_operand = left_operand.split(',')
-  var right_operand = getCode(block, 'right_operand');
-  right_operand = right_operand.split(',')
   var operator = block.getFieldValue('operator')
+  var precedence
+  var precedence
   switch (operator) {
   	case 'add':
   		operator = '+';
+  		precedence = Blockly.JavaScript.ORDER_ADDITION
   		break;
   	case 'subtract':
   		operator = '-';
+  		precedence = Blockly.JavaScript.ORDER_SUBTRACTION
   		break;
   	case 'divide':
   		operator = '/'
+  		precedence = Blockly.JavaScript.ORDER_DIVISION
   		break;
   	case 'gt':
   		operator = '>'
+  		precedence = Blockly.JavaScript.ORDER_RELATIONAL
   		break;
   	case 'lt':
   		operator = '<'
+  		precedence = Blockly.JavaScript.ORDER_RELATIONAL
   		break;
   	case 'multiply':
   		operator = '*'
+  		precedence = Blockly.JavaScript.ORDER_MULTIPLICATION
   		break;
   	case 'eq':
   		operator = '='
+  		precedence = Blockly.JavaScript.ORDER_EQUALITY
   		break;
   }
+  var left_operand = Blockly.JavaScript.valueToCode(block, 'left_operand', precedence);
+  left_operand = left_operand.split(',')
+  var right_operand = Blockly.JavaScript.valueToCode(block, 'right_operand',precedence);
+  right_operand = right_operand.split(',')
+  
+  
   var binopFormulas = new Array();
   if (left_operand.length === right_operand.length || right_operand.length === 1) {
   	for (var i = 0; i < left_operand.length; i++) {
@@ -302,8 +313,7 @@ Blockly.JavaScript['fn_binop'] = function(block) {
   	return undefined;
   }
   var code = binopFormulas.join();
-  console.log(code)
-  return code
+  return [code, precedence]
 };
 
 Blockly.JavaScript['fn_divide'] = function(block) {
