@@ -179,6 +179,9 @@ export async function validateFormula() {
       var ws = getWorkspace();
       var ids = getCol(xlValues,0)
       var index = ids.indexOf(ws.id);
+      console.log(ws.id)
+      console.log(ws.name)
+      console.log(ws.fullXML)
       if (index === -1) {
         xlValues.push([ws.id, ws.name, ws.fullXML]);
       } else {

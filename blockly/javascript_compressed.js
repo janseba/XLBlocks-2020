@@ -111,7 +111,7 @@ Blockly.JavaScript['fn_sum'] = function(block) {
   }
   // TODO: Assemble JavaScript into code variable.
   var code = sumFormulas.join();
-  return code;
+  return [code, Blockly.JavaScript.ORDER_NONE];
 };
 
 Blockly.JavaScript['range'] = function(block) {
@@ -195,16 +195,16 @@ Blockly.JavaScript['formula'] = function(block) {
 };
 
 Blockly.JavaScript['lookup'] = function(block) {
-  var value_lookupvalue = Blockly.JavaScript.valueToCode(block, 'lookupValue', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_lookupcolumn = Blockly.JavaScript.valueToCode(block, 'lookupColumn', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_resultcolumn = Blockly.JavaScript.valueToCode(block, 'resultColumn', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_lookupvalue = Blockly.JavaScript.valueToCode(block, 'lookupValue', Blockly.JavaScript.ORDER_NONE);
+  var value_lookupcolumn = Blockly.JavaScript.valueToCode(block, 'lookupColumn', Blockly.JavaScript.ORDER_NONE);
+  var value_resultcolumn = Blockly.JavaScript.valueToCode(block, 'resultColumn', Blockly.JavaScript.ORDER_NONE);
   var lookupValues = value_lookupvalue.split(',');
   var lookupFormulas = new Array();
   for (var i = 0; i < lookupValues.length; i++) {
     lookupFormulas[i] = 'INDEX(' + value_resultcolumn + '|MATCH(' + lookupValues[i] + '|' + value_lookupcolumn + '|0))'
   }
   // TODO: Assemble JavaScript into code variable.
-  var code = lookupFormulas.join();
+  var code = [lookupFormulas.join(), Blockly.JavaScript.ORDER_NONE];
   return code;
 };
 
@@ -336,8 +336,7 @@ Blockly.JavaScript['fn_divide'] = function(block) {
 };
 
 Blockly.JavaScript['fn_if_error'] = function(block) {
-  var value_formula = getCode(block, 'formula');
-  var value_if_error = getCode(block, 'if_error');
+  var value_formula = Blockly.JavaScript.valueToCode(block, 'formula', Blockly.JavaScript.ORDER_NONE);
   var value_if_error = Blockly.JavaScript.valueToCode(block, 'if_error', Blockly.JavaScript.ORDER_NONE);
   var formulas = value_formula.split(',');
   var ifErrorFormulas = new Array();
@@ -347,7 +346,7 @@ Blockly.JavaScript['fn_if_error'] = function(block) {
   }
   var code = ifErrorFormulas.join();
   // TODO: Change ORDER_NONE to the correct strength.
-  return code;
+  return [code, Blockly.JavaScript.ORDER_NONE]
 };
 
 Blockly.JavaScript['fn_round'] = function(block) {
@@ -365,9 +364,9 @@ Blockly.JavaScript['fn_round'] = function(block) {
 };
 
 Blockly.JavaScript['fn_if'] = function(block) {
-  var value_test = getCode(block, 'test');
-  var value_when_true = getCode(block, 'when_true');
-  var value_when_false = getCode(block, 'when_false');
+  var value_test = Blockly.JavaScript.valueToCode(block, 'test',Blockly.JavaScript.ORDER_NONE);
+  var value_when_true = Blockly.JavaScript.valueToCode(block, 'when_true',Blockly.JavaScript.ORDER_NONE);
+  var value_when_false = Blockly.JavaScript.valueToCode(block, 'when_false',Blockly.JavaScript.ORDER_NONE);
   var tests = value_test.split(',');
   var whenTrues = value_when_true.split(',');
   var whenFalses = value_when_false.split(',');
@@ -393,7 +392,7 @@ Blockly.JavaScript['fn_if'] = function(block) {
       }
       ifFormulas[i] = 'IF(' + tests[i] + '|' + whenTrue + '|' + whenFalse + ')'
     }
-  var code = ifFormulas.join();
+  var code = [ifFormulas.join(),Blockly.JavaScript.ORDER_NONE];
   return code;
 };
 
@@ -481,20 +480,32 @@ Blockly.JavaScript['fn_sumifs'] = function(block) {
       singleFilters.push(filterArray);
     }
   }
+  console.log(eachRowFilters)
+  console.log(singleFilters)
+  console.log(eachRowFilters[0])
   var sumifsFormulas = new Array();
-  for (var i = 0; i < eachRowFilters[0].length; i++) {
-    var sumifs = 'SUMIFS(' + value_sum_range
-    for (var j = 0; j < singleFilters.length; j++) {
-      sumifs += singleFilters[j][0]; 
-    }
-    for (var j = 0; j < eachRowFilters.length; j++) {
-      sumifs += eachRowFilters[j][i]
-    }
-    sumifs += ')'
-    sumifsFormulas.push(sumifs);
-  }
+  if (eachRowFilters.length > 0) {
+	  for (var i = 0; i < eachRowFilters[0].length; i++) {
+	    var sumifs = 'SUMIFS(' + value_sum_range
+	    for (var j = 0; j < singleFilters.length; j++) {
+	      sumifs += singleFilters[j][0]; 
+	    }
+	    for (var j = 0; j < eachRowFilters.length; j++) {
+	      sumifs += eachRowFilters[j][i]
+	    }
+	    sumifs += ')'
+	    sumifsFormulas.push(sumifs);
+	  }
+	} else {
+		var sumifs = 'SUMIFS(' + value_sum_range
+		for (var j = 0; j < singleFilters.length; j++) {
+			sumifs += singleFilters[j][0];
+		}
+		sumifs += ')'
+		sumifsFormulas.push(sumifs)
+	}
 
-  var code = sumifsFormulas.join();
+  var code = [sumifsFormulas.join(), Blockly.JavaScript.ORDER_NONE]
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };
@@ -513,16 +524,16 @@ Blockly.JavaScript['fn_sumifs_filters'] = function(block) {
 };
 
 Blockly.JavaScript['fn_vlookup'] = function(block) {
-  var value_lookup_value = getCode(block, 'lookup_value');
-  var value_table_array = getCode(block, 'table_array');
-  var value_col_index_num = getCode(block, 'col_index_num');
-  var value_range_lookup = getCode(block, 'range_lookup');
+  var value_lookup_value = Blockly.JavaScript.valueToCode(block, 'lookup_value', Blockly.JavaScript.ORDER_NONE);
+  var value_table_array = Blockly.JavaScript.valueToCode(block, 'table_array', Blockly.JavaScript.ORDER_NONE);
+  var value_col_index_num = Blockly.JavaScript.valueToCode(block, 'col_index_num', Blockly.JavaScript.ORDER_NONE);
+  var value_range_lookup = Blockly.JavaScript.valueToCode(block, 'range_lookup', Blockly.JavaScript.ORDER_NONE);
   value_lookup_value = value_lookup_value.split(',')
   var vlookupFormulas = new Array();
   for (var i = 0; i < value_lookup_value.length; i++) {
   	vlookupFormulas[i] = 'VLOOKUP(' + value_lookup_value[i] + '|' + value_table_array + '|' + value_col_index_num + '|' + value_range_lookup + ')'
   }
-  var code = vlookupFormulas.join();
+  var code = [vlookupFormulas.join(), Blockly.JavaScript.ORDER_NONE];
   // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };
