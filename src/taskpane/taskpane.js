@@ -30,6 +30,7 @@ Office.onReady(info => {
         toggleButton('delete',false)
       }
     }) 
+    workspace.addChangeListener(handleBlocklyEvent)
   }
 });
 
@@ -858,4 +859,6 @@ export function visit(obj, str, output){
     }
   }
 }
-
+export function handleBlocklyEvent(blocklyEvent) {
+  console.log('hallo dit is een blockly event')
+} 
