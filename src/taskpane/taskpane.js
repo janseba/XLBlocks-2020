@@ -865,27 +865,64 @@ export function handleBlocklyEvent(blocklyEvent) {
   if (blocklyEvent.type == 'ui' && blocklyEvent.element == 'selected') {
     var selectedBlock = workspace.getBlockById(blocklyEvent.newValue)
     restoreFormat().then(function(){
-      if (selectedBlock !== null) {
-        var children = selectedBlock.getDescendants()
-        for (var i = 0; i < children.length; i++) {
-          if (children[i].type == 'range') {
-            highlightCell(children[i].inputList[0].fieldRow[0].value_)
-          }
-        }      
-      }      
+      saveCurrentFormats(selectedBlock).then(function(){
+        highlightCells(selectedBlock)
+      })   
     })
   }
 }
 
-export async function highlightCell(address) {
+export async function saveCurrentFormats(selectedBlock) {
   await Excel.run(async context => {
     var sheet = context.workbook.worksheets.getActiveWorksheet()
-    var range = sheet.getRange(address)
-    var borders = range.format.borders
-    borders.load('items')
-    await context.sync()
-    selectedRanges[address]= JSON.parse(JSON.stringify(borders))
-    borders.items[0].style = 'Continuous'
+    // save current format
+    if (selectedBlock !== null) {
+      var children = selectedBlock.getDescendants()
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].type == 'range') {
+          var address = children[i].inputList[0].fieldRow[0].value_
+          var range = sheet.getRange(address)
+          var EdgeTop = range.format.borders.getItem('EdgeTop')
+          var EdgeBottom = range.format.borders.getItem('EdgeBottom')
+          var EdgeLeft = range.format.borders.getItem('EdgeLeft')
+          var EdgeRight = range.format.borders.getItem('EdgeLeft')
+          EdgeTop.load('color,style')
+          EdgeBottom.load('color,style')
+          EdgeLeft.load('color,style')
+          EdgeRight.load('color,style')
+          await context.sync()
+          var borderInfo = new Object()
+          borderInfo.EdgeTop = EdgeTop.toJSON()
+          borderInfo.EdgeBottom = EdgeBottom.toJSON()
+          borderInfo.EdgeLeft = EdgeLeft.toJSON()
+          borderInfo.EdgeRight = EdgeRight.toJSON()
+          selectedRanges[address] = borderInfo
+        }
+      }
+    }    
+  })
+}
+
+export async function highlightCells(selectedBlock) {
+  await Excel.run(async context => {
+    var sheet = context.workbook.worksheets.getActiveWorksheet()
+    // change format
+    if (selectedBlock !== null) {
+      var children = selectedBlock.getDescendants()
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].type == 'range') {
+          var address = children[i].inputList[0].fieldRow[0].value_
+          var range = sheet.getRange(address)
+          var borders = range.format.borders
+          borders.load('items')
+          await context.sync()
+          for (var j = 0; j < 4; j++) {
+            borders.items[j].style = 'Continuous'
+            borders.items[j].color = 'red'
+          }
+        }
+      }
+    }
   })
 }
 
@@ -894,10 +931,21 @@ export async function restoreFormat() {
     for (var key in selectedRanges) {
       var sheet = context.workbook.worksheets.getActiveWorksheet()
       var range = sheet.getRange(key)
-      var borders = range.format.borders
-      borders.getItem('EdgeTop').style = selectedRanges[key].items[0].style
-      delete selectedRanges[key]      
+      var EdgeTop = range.format.borders.getItem('EdgeTop')
+      var EdgeBottom = range.format.borders.getItem('EdgeBottom')
+      var EdgeLeft = range.format.borders.getItem('EdgeLeft')
+      var EdgeRight = range.format.borders.getItem('EdgeRight')
+      EdgeTop.load('color,style')
+      EdgeBottom.load('color,style')
+      EdgeLeft.load('color,style')
+      EdgeRight.load('color,style')
+      await context.sync()
+      //EdgeTop.style = 'none'
+      //EdgeBottom.style = 'none'
+      EdgeLeft.style = 'none'
+      EdgeRight.style = 'none'
     }
+    selectedRanges = new Array()
   })
 }
 
