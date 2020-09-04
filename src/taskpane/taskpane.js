@@ -5,6 +5,8 @@
 
 /* global console, document, Excel, Office */
 
+var selectedRanges = new Array();
+
 Office.onReady(info => {
   if (info.host === Office.HostType.Excel) {
     //document.getElementById("sideload-msg").style.display = "none";
@@ -860,5 +862,50 @@ export function visit(obj, str, output){
   }
 }
 export function handleBlocklyEvent(blocklyEvent) {
-  console.log('hallo dit is een blockly event')
-} 
+  if (blocklyEvent.type == 'ui' && blocklyEvent.element == 'selected') {
+    var selectedBlock = workspace.getBlockById(blocklyEvent.newValue)
+    console.log(selectedBlock)
+    var previousBlock = workspace.getBlockById(blocklyEvent.oldValue)
+    console.log(previousBlock)
+    if (previousBlock !== null) {
+      var children = previousBlock.getDescendants()
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].type == 'range') {
+          restoreFormat(children[i].inputList[0].fieldRow[0].value_)
+        }
+      }
+    }
+    if (selectedBlock !== null) {
+      var children = selectedBlock.getDescendants()
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].type == 'range') {
+          console.log(children[i].inputList[0].fieldRow[0].value_)
+          highlightCell(children[i].inputList[0].fieldRow[0].value_).then(function() {console.log(selectedRanges)})
+        }
+      }      
+    }
+  }
+}
+
+export async function highlightCell(address) {
+  await Excel.run(async context => {
+    var sheet = context.workbook.worksheets.getActiveWorksheet()
+    var range = sheet.getRange(address)
+    var borders = range.format.borders
+    borders.load('items')
+    await context.sync()
+    selectedRanges[address]= JSON.parse(JSON.stringify(borders))
+    borders.items[0].style = 'Continuous'
+  })
+}
+
+export async function restoreFormat(address) {
+  await Excel.run(async context => {
+    var sheet = context.workbook.worksheets.getActiveWorksheet()
+    var range = sheet.getRange(address)
+    var borders = range.format.borders
+    borders.getItem('EdgeTop').style = selectedRanges[address].items[0].style
+
+  })
+}
+
