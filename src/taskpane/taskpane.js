@@ -864,26 +864,16 @@ export function visit(obj, str, output){
 export function handleBlocklyEvent(blocklyEvent) {
   if (blocklyEvent.type == 'ui' && blocklyEvent.element == 'selected') {
     var selectedBlock = workspace.getBlockById(blocklyEvent.newValue)
-    console.log(selectedBlock)
-    var previousBlock = workspace.getBlockById(blocklyEvent.oldValue)
-    console.log(previousBlock)
-    if (previousBlock !== null) {
-      var children = previousBlock.getDescendants()
-      for (var i = 0; i < children.length; i++) {
-        if (children[i].type == 'range') {
-          restoreFormat(children[i].inputList[0].fieldRow[0].value_)
-        }
-      }
-    }
-    if (selectedBlock !== null) {
-      var children = selectedBlock.getDescendants()
-      for (var i = 0; i < children.length; i++) {
-        if (children[i].type == 'range') {
-          console.log(children[i].inputList[0].fieldRow[0].value_)
-          highlightCell(children[i].inputList[0].fieldRow[0].value_).then(function() {console.log(selectedRanges)})
-        }
+    restoreFormat().then(function(){
+      if (selectedBlock !== null) {
+        var children = selectedBlock.getDescendants()
+        for (var i = 0; i < children.length; i++) {
+          if (children[i].type == 'range') {
+            highlightCell(children[i].inputList[0].fieldRow[0].value_)
+          }
+        }      
       }      
-    }
+    })
   }
 }
 
@@ -899,13 +889,15 @@ export async function highlightCell(address) {
   })
 }
 
-export async function restoreFormat(address) {
+export async function restoreFormat() {
   await Excel.run(async context => {
-    var sheet = context.workbook.worksheets.getActiveWorksheet()
-    var range = sheet.getRange(address)
-    var borders = range.format.borders
-    borders.getItem('EdgeTop').style = selectedRanges[address].items[0].style
-
+    for (var key in selectedRanges) {
+      var sheet = context.workbook.worksheets.getActiveWorksheet()
+      var range = sheet.getRange(key)
+      var borders = range.format.borders
+      borders.getItem('EdgeTop').style = selectedRanges[key].items[0].style
+      delete selectedRanges[key]      
+    }
   })
 }
 
