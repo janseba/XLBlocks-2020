@@ -864,13 +864,7 @@ export function visit(obj, str, output){
 }
 export function handleBlocklyEvent(blocklyEvent) {
   if (blocklyEvent.type == 'ui' && blocklyEvent.element == 'selected') {
-    console.log(blocklyEvent.newValue)
-    var selectedBlock = workspace.getBlockById(blocklyEvent.newValue)
-    restoreFormat().then(function(){
-      saveCurrentFormats(selectedBlock).then(function(){
-        highlightCells(selectedBlock)
-      })   
-    })
+
   }
 }
 
