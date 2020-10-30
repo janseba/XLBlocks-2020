@@ -5,7 +5,7 @@
 
 /* global console, document, Excel, Office */
 
-var selectedRanges = new Array();
+var originalFormatting = new Object();
 var testRanges = new Object();
 
 Office.onReady(info => {
@@ -864,40 +864,39 @@ export function visit(obj, str, output){
 }
 export function handleBlocklyEvent(blocklyEvent) {
   if (blocklyEvent.type == 'ui' && blocklyEvent.element == 'selected') {
+    var selectedBlock = workspace.getBlockById(blocklyEvent.newValue)
 
+    // restore cell formats if originalFormatting has been populated
+    if (Object.keys(originalFormatting).length !== 0) {
+      console.log('restore formats')
+    } else {
+        saveCurrentFormats(selectedBlock)
+      }
   }
 }
 
 export async function saveCurrentFormats(selectedBlock) {
   await Excel.run(async context => {
-    var sheets = context.workbook.worksheets
-    sheets.load('items/name')
-    await context.sync()
-    if (sheetExists(sheets.items, 'Formatting')) {
-      var formatSht = sheets.getItem('Formatting')
-    } else {
-      var formatSht = sheets.add('Formatting')
-    }
-    var sheet = sheets.getActiveWorksheet()
-    // save current format
     if (selectedBlock !== null) {
+      var sheet = context.workbook.worksheets.getActiveWorksheet()
       var children = selectedBlock.getDescendants()
       for (var i = 0; i < children.length; i++) {
-        if (children[i].type == 'range') {
+        if(children[i].type == 'range') {
           var address = children[i].inputList[0].fieldRow[0].value_
           var range = sheet.getRange(address)
           var borders = range.format.borders
-          var options = Excel.CellPropertiesBorderLoadOptions = {
+          var options = Excel.CellPropertiesBorderLoadOptions={
             color: true,
             style: true
           }
           var cellProperties = borders.load(options)
-          await context.sync()
-          console.log(cellProperties)
-          selectedRanges[address]=cellProperties
+          await context
+          originalFormatting[address] = cellProperties
         }
       }
-    }    
+      console.log(originalFormatting)
+      console.log(originalFormatting.length)
+    }
   })
 }
 
