@@ -6,6 +6,7 @@
 /* global console, document, Excel, Office */
 
 var selectedRanges = new Array();
+var testRanges = new Object();
 
 Office.onReady(info => {
   if (info.host === Office.HostType.Excel) {
@@ -863,6 +864,7 @@ export function visit(obj, str, output){
 }
 export function handleBlocklyEvent(blocklyEvent) {
   if (blocklyEvent.type == 'ui' && blocklyEvent.element == 'selected') {
+    console.log(blocklyEvent.newValue)
     var selectedBlock = workspace.getBlockById(blocklyEvent.newValue)
     restoreFormat().then(function(){
       saveCurrentFormats(selectedBlock).then(function(){
@@ -874,7 +876,15 @@ export function handleBlocklyEvent(blocklyEvent) {
 
 export async function saveCurrentFormats(selectedBlock) {
   await Excel.run(async context => {
-    var sheet = context.workbook.worksheets.getActiveWorksheet()
+    var sheets = context.workbook.worksheets
+    sheets.load('items/name')
+    await context.sync()
+    if (sheetExists(sheets.items, 'Formatting')) {
+      var formatSht = sheets.getItem('Formatting')
+    } else {
+      var formatSht = sheets.add('Formatting')
+    }
+    var sheet = sheets.getActiveWorksheet()
     // save current format
     if (selectedBlock !== null) {
       var children = selectedBlock.getDescendants()
@@ -882,21 +892,15 @@ export async function saveCurrentFormats(selectedBlock) {
         if (children[i].type == 'range') {
           var address = children[i].inputList[0].fieldRow[0].value_
           var range = sheet.getRange(address)
-          var EdgeTop = range.format.borders.getItem('EdgeTop')
-          var EdgeBottom = range.format.borders.getItem('EdgeBottom')
-          var EdgeLeft = range.format.borders.getItem('EdgeLeft')
-          var EdgeRight = range.format.borders.getItem('EdgeLeft')
-          EdgeTop.load('color,style')
-          EdgeBottom.load('color,style')
-          EdgeLeft.load('color,style')
-          EdgeRight.load('color,style')
+          var borders = range.format.borders
+          var options = Excel.CellPropertiesBorderLoadOptions = {
+            color: true,
+            style: true
+          }
+          var cellProperties = borders.load(options)
           await context.sync()
-          var borderInfo = new Object()
-          borderInfo.EdgeTop = EdgeTop.toJSON()
-          borderInfo.EdgeBottom = EdgeBottom.toJSON()
-          borderInfo.EdgeLeft = EdgeLeft.toJSON()
-          borderInfo.EdgeRight = EdgeRight.toJSON()
-          selectedRanges[address] = borderInfo
+          console.log(cellProperties)
+          selectedRanges[address]=cellProperties
         }
       }
     }    
@@ -913,13 +917,15 @@ export async function highlightCells(selectedBlock) {
         if (children[i].type == 'range') {
           var address = children[i].inputList[0].fieldRow[0].value_
           var range = sheet.getRange(address)
-          var borders = range.format.borders
-          borders.load('items')
-          await context.sync()
-          for (var j = 0; j < 4; j++) {
-            borders.items[j].style = 'Continuous'
-            borders.items[j].color = 'red'
+          var cellProperties = Excel.SettableCellProperties = {
+            format: {
+              fill: {
+                color: "F8EAEB"
+              }
+            }
           }
+          range.set(cellProperties)
+          await context.sync()
         }
       }
     }
@@ -931,21 +937,74 @@ export async function restoreFormat() {
     for (var key in selectedRanges) {
       var sheet = context.workbook.worksheets.getActiveWorksheet()
       var range = sheet.getRange(key)
-      var EdgeTop = range.format.borders.getItem('EdgeTop')
-      var EdgeBottom = range.format.borders.getItem('EdgeBottom')
-      var EdgeLeft = range.format.borders.getItem('EdgeLeft')
-      var EdgeRight = range.format.borders.getItem('EdgeRight')
-      EdgeTop.load('color,style')
-      EdgeBottom.load('color,style')
-      EdgeLeft.load('color,style')
-      EdgeRight.load('color,style')
       await context.sync()
-      //EdgeTop.style = 'none'
-      //EdgeBottom.style = 'none'
-      EdgeLeft.style = 'none'
-      EdgeRight.style = 'none'
+      range.set(selectedRanges[key].value)
+      await context.sync()
     }
-    selectedRanges = new Array()
   })
 }
 
+export async function testFormatting() {
+  Excel.run(async context => {
+    var aanUit = context.workbook.worksheets.getActiveWorksheet().getRange('A1')
+    var borderDefinition = context.workbook.worksheets.getActiveWorksheet().getRange('A2')
+    aanUit.load('values')
+    borderDefinition.load('values')
+    await context.sync()
+    console.log(aanUit.values[0][0])
+    if (aanUit.values[0][0]=='Aan') {
+      await setBorder('B2', 'EdgeTop', 'Continuous', 'red')
+      await setBorder('B2', 'EdgeBottom', 'Continuous', 'red')
+      await setBorder('B2', 'EdgeLeft', 'Continuous', 'red')
+      await setBorder('B2', 'EdgeRight', 'Continuous', 'red')
+      await setBorder('B3', 'EdgeTop', 'Continuous', 'red')
+      await setBorder('B3', 'EdgeBottom', 'Continuous', 'red')
+      await setBorder('B3', 'EdgeLeft', 'Continuous', 'red')
+      await setBorder('B3', 'EdgeRight', 'Continuous', 'red')
+      borderDefinition.values = [[JSON.stringify(testRanges)]]
+      await context.sync
+    } else {
+      var oldBorderDefinitions = JSON.parse(borderDefinition.values[0][0])
+      console.log(oldBorderDefinitions)
+      const entries = Object.entries(oldBorderDefinitions)
+      for (var i = 0; i < entries.length; i++) {
+        console.log(entries[i])
+        console.log(entries[i][1].EdgeTop.style)
+        console.log(entries[i][1].EdgeTop.color)
+        console.log(entries[i][0])
+        await resetBorder(entries[i][0], 'EdgeTop', entries[i][1].EdgeTop.style, entries[i][1].EdgeTop.color)
+      }
+    }
+  })
+}
+
+export async function setBorder(address, border, style, color) {
+  await Excel.run(async context => {
+    var range = context.workbook.worksheets.getActiveWorksheet().getRange(address)
+    var rand = range.format.borders.getItem(border)
+    rand.load({color: true, style: true})
+    await context.sync()
+    var borderFormat = new Object()
+    borderFormat.color = rand.color
+    borderFormat.style = rand.style
+    var borderEdge = testRanges[address]
+    if (borderEdge === undefined) {
+      borderEdge = new Object()
+    }
+    borderEdge[border] = borderFormat
+    testRanges[address] = borderEdge
+    range.format.borders.getItem(border).style = style
+    range.format.borders.getItem(border).color = color
+    await context.sync()
+  })
+}
+
+export async function resetBorder(address, border, style, color) {
+  await Excel.run(async context => {
+    var range = context.workbook.worksheets.getActiveWorksheet().getRange(address)
+    console.log (address + ',' + border + ',' + style + ',' + color)
+    range.format.borders.getItem(border).color = color
+    range.format.borders.getItem(border).style = style
+    await context.sync()
+  })
+}
