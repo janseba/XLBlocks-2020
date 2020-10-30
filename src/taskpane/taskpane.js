@@ -870,9 +870,38 @@ export function handleBlocklyEvent(blocklyEvent) {
     if (Object.keys(originalFormatting).length !== 0) {
       console.log('restore formats')
     } else {
-        saveCurrentFormats(selectedBlock)
+        saveCurrentFormats(selectedBlock).then(
+          function(){
+            applyHighlightBorder(selectedBlock)
+          })
       }
   }
+}
+
+export async function applyHighlightBorder(selectedBlock) {
+  await Excel.run(async context => {
+    var sheet = context.workbook.worksheets.getActiveWorksheet()
+    var children = selectedBlock.getDescendants()
+    for (var i = 0; i < children.length; i++) {
+      if (children[i].type =='range') {
+        var address = children[i].inputList[0].fieldRow[0].value_
+        var range = sheet.getRange(address)
+        var b = range.format.borders.getItem('EdgeTop')
+        b.style = 'Continuous'
+        b.color = 'red'
+        b = range.format.borders.getItem('EdgeRight')
+        b.style = 'Continuous'
+        b.color = 'red'
+        b = range.format.borders.getItem('EdgeBottom')
+        b.style = 'Continuous'
+        b.color = 'red'
+        b = range.format.borders.getItem('EdgeLeft')
+        b.style = 'Continuous'
+        b.color = 'red'
+        await context.sync()
+      }
+    }
+  })
 }
 
 export async function saveCurrentFormats(selectedBlock) {
@@ -890,12 +919,10 @@ export async function saveCurrentFormats(selectedBlock) {
             style: true
           }
           var cellProperties = borders.load(options)
-          await context
+          await context.sync()
           originalFormatting[address] = cellProperties
         }
       }
-      console.log(originalFormatting)
-      console.log(originalFormatting.length)
     }
   })
 }
