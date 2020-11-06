@@ -923,9 +923,18 @@ export async function saveCurrentFormats(selectedBlock) {
           }
           var cellProperties = borders.load(options)
           await context.sync()
-          originalFormatting[address] = cellProperties
+          var cellFormat = {items: []}
+          for (var j = 0; j < 4; j++) {
+            var item = {
+              color: cellProperties.items[j].color,
+              style: cellProperties.items[j].style
+              }
+            cellFormat.items[j] = item
+          }
+          originalFormatting[address] = cellFormat
         }
       }
+      console.log(originalFormatting)
     }
   })
 }
