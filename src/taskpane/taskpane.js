@@ -869,6 +869,8 @@ export function handleBlocklyEvent(blocklyEvent) {
     // restore cell formats if originalFormatting has been populated
     if (Object.keys(originalFormatting).length !== 0) {
       console.log('restore formats')
+      console.log(originalFormatting)
+      restoreFormat()
     } else {
         saveCurrentFormats(selectedBlock).then(
           function(){
@@ -916,7 +918,8 @@ export async function saveCurrentFormats(selectedBlock) {
           var borders = range.format.borders
           var options = Excel.CellPropertiesBorderLoadOptions={
             color: true,
-            style: true
+            style: true,
+            sideIndex: true,
           }
           var cellProperties = borders.load(options)
           await context.sync()
@@ -954,13 +957,19 @@ export async function highlightCells(selectedBlock) {
 
 export async function restoreFormat() {
   await Excel.run(async context => {
-    for (var key in selectedRanges) {
+    for (var key in originalFormatting) {
       var sheet = context.workbook.worksheets.getActiveWorksheet()
       var range = sheet.getRange(key)
-      await context.sync()
-      range.set(selectedRanges[key].value)
+
+      for (var i = 0; i < 8; i++) {
+        console.log(i, originalFormatting[key].items[i].color, originalFormatting[key].items[i].style)
+        range.format.borders.getItem(i).color = originalFormatting[key].items[i].color
+        range.format.borders.getItem(i).style = originalFormatting[key].items[i].style
+      }
       await context.sync()
     }
+    originalFormatting = {}
+    console.log(originalFormatting)
   })
 }
 
