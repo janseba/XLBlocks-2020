@@ -963,14 +963,3 @@ export async function restoreFormat() {
     console.log(originalFormatting)
   })
 }
-
-
-export async function resetBorder(address, border, style, color) {
-  await Excel.run(async context => {
-    var range = context.workbook.worksheets.getActiveWorksheet().getRange(address)
-    console.log (address + ',' + border + ',' + style + ',' + color)
-    range.format.borders.getItem(border).color = color
-    range.format.borders.getItem(border).style = style
-    await context.sync()
-  })
-}
