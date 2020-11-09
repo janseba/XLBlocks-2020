@@ -964,39 +964,6 @@ export async function restoreFormat() {
   })
 }
 
-export async function testFormatting() {
-  Excel.run(async context => {
-    var aanUit = context.workbook.worksheets.getActiveWorksheet().getRange('A1')
-    var borderDefinition = context.workbook.worksheets.getActiveWorksheet().getRange('A2')
-    aanUit.load('values')
-    borderDefinition.load('values')
-    await context.sync()
-    console.log(aanUit.values[0][0])
-    if (aanUit.values[0][0]=='Aan') {
-      await setBorder('B2', 'EdgeTop', 'Continuous', 'red')
-      await setBorder('B2', 'EdgeBottom', 'Continuous', 'red')
-      await setBorder('B2', 'EdgeLeft', 'Continuous', 'red')
-      await setBorder('B2', 'EdgeRight', 'Continuous', 'red')
-      await setBorder('B3', 'EdgeTop', 'Continuous', 'red')
-      await setBorder('B3', 'EdgeBottom', 'Continuous', 'red')
-      await setBorder('B3', 'EdgeLeft', 'Continuous', 'red')
-      await setBorder('B3', 'EdgeRight', 'Continuous', 'red')
-      borderDefinition.values = [[JSON.stringify(testRanges)]]
-      await context.sync
-    } else {
-      var oldBorderDefinitions = JSON.parse(borderDefinition.values[0][0])
-      console.log(oldBorderDefinitions)
-      const entries = Object.entries(oldBorderDefinitions)
-      for (var i = 0; i < entries.length; i++) {
-        console.log(entries[i])
-        console.log(entries[i][1].EdgeTop.style)
-        console.log(entries[i][1].EdgeTop.color)
-        console.log(entries[i][0])
-        await resetBorder(entries[i][0], 'EdgeTop', entries[i][1].EdgeTop.style, entries[i][1].EdgeTop.color)
-      }
-    }
-  })
-}
 
 export async function setBorder(address, border, style, color) {
   await Excel.run(async context => {
