@@ -868,8 +868,6 @@ export function handleBlocklyEvent(blocklyEvent) {
 
     // restore cell formats if originalFormatting has been populated
     if (Object.keys(originalFormatting).length !== 0) {
-      console.log('restore formats')
-      console.log(originalFormatting)
       restoreFormat()
     } else {
         saveCurrentFormats(selectedBlock).then(
@@ -889,19 +887,6 @@ export async function applyHighlightBorder(selectedBlock) {
         var address = children[i].inputList[0].fieldRow[0].value_
         var range = sheet.getRange(address)
         range.format.fill.color = 'F8EAEB'
-
-        // var b = range.format.borders.getItem('EdgeTop')
-        // b.style = 'Continuous'
-        // b.color = 'red'
-        // b = range.format.borders.getItem('EdgeRight')
-        // b.style = 'Continuous'
-        // b.color = 'red'
-        // b = range.format.borders.getItem('EdgeBottom')
-        // b.style = 'Continuous'
-        // b.color = 'red'
-        // b = range.format.borders.getItem('EdgeLeft')
-        // b.style = 'Continuous'
-        // b.color = 'red'
         await context.sync()
       }
     }
@@ -917,16 +902,10 @@ export async function saveCurrentFormats(selectedBlock) {
         if(children[i].type == 'range') {
           var address = children[i].inputList[0].fieldRow[0].value_
           var range = sheet.getRange(address)
-          var rangeWit = sheet.getRange('I21:I22')
-          var rangeBlank = sheet.getRange('I21')
           var borders = range.format.borders
           var fill = range.format.fill
           fill.load({color: true, tintAndShade: true})
-          rangeWit.format.fill.load({color: true, pattern: true, patternColor: true, patternTintAndShade: true, tintAndShade: true})
-          rangeBlank.format.fill.load({color: true, pattern: true, patternColor: true, patternTintAndShade: true, tintAndShade: true})
           await context.sync()
-          console.log(rangeWit.format.fill)
-          console.log(rangeBlank.format.fill)
           var options = Excel.CellPropertiesBorderLoadOptions={
             color: true,
             style: true,
@@ -934,18 +913,15 @@ export async function saveCurrentFormats(selectedBlock) {
           }
           var cellProperties = borders.load(options)
           await context.sync()
-          console.log(cellProperties)
           var cellFormat = {}
           cellFormat.color = fill.color
           cellFormat.tintAndShade = fill.tintAndShade
           originalFormatting[address] = cellFormat
         }
       }
-      console.log(originalFormatting)
     }
   })
 }
-
 
 export async function restoreFormat() {
   await Excel.run(async context => {
@@ -960,6 +936,5 @@ export async function restoreFormat() {
       await context.sync()
     }
     originalFormatting = {}
-    console.log(originalFormatting)
   })
 }
