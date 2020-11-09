@@ -888,18 +888,20 @@ export async function applyHighlightBorder(selectedBlock) {
       if (children[i].type =='range') {
         var address = children[i].inputList[0].fieldRow[0].value_
         var range = sheet.getRange(address)
-        var b = range.format.borders.getItem('EdgeTop')
-        b.style = 'Continuous'
-        b.color = 'red'
-        b = range.format.borders.getItem('EdgeRight')
-        b.style = 'Continuous'
-        b.color = 'red'
-        b = range.format.borders.getItem('EdgeBottom')
-        b.style = 'Continuous'
-        b.color = 'red'
-        b = range.format.borders.getItem('EdgeLeft')
-        b.style = 'Continuous'
-        b.color = 'red'
+        range.format.fill.color = 'F8EAEB'
+
+        // var b = range.format.borders.getItem('EdgeTop')
+        // b.style = 'Continuous'
+        // b.color = 'red'
+        // b = range.format.borders.getItem('EdgeRight')
+        // b.style = 'Continuous'
+        // b.color = 'red'
+        // b = range.format.borders.getItem('EdgeBottom')
+        // b.style = 'Continuous'
+        // b.color = 'red'
+        // b = range.format.borders.getItem('EdgeLeft')
+        // b.style = 'Continuous'
+        // b.color = 'red'
         await context.sync()
       }
     }
@@ -915,7 +917,16 @@ export async function saveCurrentFormats(selectedBlock) {
         if(children[i].type == 'range') {
           var address = children[i].inputList[0].fieldRow[0].value_
           var range = sheet.getRange(address)
+          var rangeWit = sheet.getRange('I21:I22')
+          var rangeBlank = sheet.getRange('I21')
           var borders = range.format.borders
+          var fill = range.format.fill
+          fill.load({color: true, tintAndShade: true})
+          rangeWit.format.fill.load({color: true, pattern: true, patternColor: true, patternTintAndShade: true, tintAndShade: true})
+          rangeBlank.format.fill.load({color: true, pattern: true, patternColor: true, patternTintAndShade: true, tintAndShade: true})
+          await context.sync()
+          console.log(rangeWit.format.fill)
+          console.log(rangeBlank.format.fill)
           var options = Excel.CellPropertiesBorderLoadOptions={
             color: true,
             style: true,
@@ -923,14 +934,10 @@ export async function saveCurrentFormats(selectedBlock) {
           }
           var cellProperties = borders.load(options)
           await context.sync()
-          var cellFormat = {items: []}
-          for (var j = 0; j < 4; j++) {
-            var item = {
-              color: cellProperties.items[j].color,
-              style: cellProperties.items[j].style
-              }
-            cellFormat.items[j] = item
-          }
+          console.log(cellProperties)
+          var cellFormat = {}
+          cellFormat.color = fill.color
+          cellFormat.tintAndShade = fill.tintAndShade
           originalFormatting[address] = cellFormat
         }
       }
@@ -939,41 +946,16 @@ export async function saveCurrentFormats(selectedBlock) {
   })
 }
 
-export async function highlightCells(selectedBlock) {
-  await Excel.run(async context => {
-    var sheet = context.workbook.worksheets.getActiveWorksheet()
-    // change format
-    if (selectedBlock !== null) {
-      var children = selectedBlock.getDescendants()
-      for (var i = 0; i < children.length; i++) {
-        if (children[i].type == 'range') {
-          var address = children[i].inputList[0].fieldRow[0].value_
-          var range = sheet.getRange(address)
-          var cellProperties = Excel.SettableCellProperties = {
-            format: {
-              fill: {
-                color: "F8EAEB"
-              }
-            }
-          }
-          range.set(cellProperties)
-          await context.sync()
-        }
-      }
-    }
-  })
-}
 
 export async function restoreFormat() {
   await Excel.run(async context => {
     for (var key in originalFormatting) {
       var sheet = context.workbook.worksheets.getActiveWorksheet()
       var range = sheet.getRange(key)
-
-      for (var i = 0; i < 8; i++) {
-        console.log(i, originalFormatting[key].items[i].color, originalFormatting[key].items[i].style)
-        range.format.borders.getItem(i).color = originalFormatting[key].items[i].color
-        range.format.borders.getItem(i).style = originalFormatting[key].items[i].style
+      if (originalFormatting[key].tintAndShade != null) {
+        range.format.fill.color = originalFormatting[key].color
+      } else {
+        range.format.fill.clear()
       }
       await context.sync()
     }
