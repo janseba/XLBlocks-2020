@@ -965,27 +965,6 @@ export async function restoreFormat() {
 }
 
 
-export async function setBorder(address, border, style, color) {
-  await Excel.run(async context => {
-    var range = context.workbook.worksheets.getActiveWorksheet().getRange(address)
-    var rand = range.format.borders.getItem(border)
-    rand.load({color: true, style: true})
-    await context.sync()
-    var borderFormat = new Object()
-    borderFormat.color = rand.color
-    borderFormat.style = rand.style
-    var borderEdge = testRanges[address]
-    if (borderEdge === undefined) {
-      borderEdge = new Object()
-    }
-    borderEdge[border] = borderFormat
-    testRanges[address] = borderEdge
-    range.format.borders.getItem(border).style = style
-    range.format.borders.getItem(border).color = color
-    await context.sync()
-  })
-}
-
 export async function resetBorder(address, border, style, color) {
   await Excel.run(async context => {
     var range = context.workbook.worksheets.getActiveWorksheet().getRange(address)
