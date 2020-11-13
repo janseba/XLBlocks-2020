@@ -425,6 +425,9 @@ export function buildFormulaDdl() {
 }
 
 export function cancel() {
+  if (Object.keys(originalFormatting).length !== 0) {
+    restoreFormat()
+  }
   workspace.clear();
   hideBlockly();
   var select = document.getElementById('ddlFormulas');
