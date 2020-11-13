@@ -869,11 +869,20 @@ export function handleBlocklyEvent(blocklyEvent) {
     // restore cell formats if originalFormatting has been populated
     if (Object.keys(originalFormatting).length !== 0) {
       restoreFormat()
+      .then(function() {
+        if (selectedBlock !== null) {
+          saveCurrentFormats(selectedBlock).then(function() {
+            applyHighlightBorder(selectedBlock)})
+        } 
+      })
     } else {
-        saveCurrentFormats(selectedBlock).then(
-          function(){
-            applyHighlightBorder(selectedBlock)
-          })
+        if (selectedBlock !== null) {
+          saveCurrentFormats(selectedBlock).then(
+            function(){
+              applyHighlightBorder(selectedBlock)
+            }
+          )
+        }
       }
   }
 }
@@ -886,7 +895,7 @@ export async function applyHighlightBorder(selectedBlock) {
       if (children[i].type =='range') {
         var address = children[i].inputList[0].fieldRow[0].value_
         var range = sheet.getRange(address)
-        range.format.fill.color = 'F8EAEB'
+        range.format.fill.color = 'FFC7CE'
         await context.sync()
       }
     }
